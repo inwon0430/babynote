@@ -392,7 +392,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 </div>
 
 <div id="app" class="app">
-  <header class="ah">
+  <header class="ah" style="display:none">
     <div class="ahi">
       <div class="ahi-row1">
         <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
@@ -728,9 +728,12 @@ function restoreItem(i){
 function goHome(){
   document.getElementById('app').style.display='none';
   document.getElementById('cover').style.display='flex';
+  // 커버에서는 헤더 숨기기
+  var ah = document.querySelector('.ah');
+  if(ah) ah.style.display='none';
 }
-function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
-function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';init();}
+function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';var ah=document.querySelector('.ah');if(ah)ah.style.display='none';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
+function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';init();}
 function cw(){if(!S.edd)return 20;var e=new Date(S.edd),l=new Date(e-280*864e5),d=Math.floor((new Date()-l)/864e5);return Math.max(1,Math.min(42,Math.floor(d/7)));}
 function wl(){if(!S.edd)return'—';var d=Math.floor((new Date(S.edd)-new Date())/864e5);if(d<0)return'🎉 출산 완료';return Math.floor(d/7)+'주 '+d%7+'일';}
 function allIds(wd){
@@ -749,7 +752,15 @@ function allIds(wd){
   var cx=S.custom[wd.w]||[];cx.forEach(function(ct){r.push(ct.id);});
   return r;
 }
-window.init = function init(){var c=cw();document.querySelector('.brand').innerHTML='<span style="color:var(--rose)" id="brandName">'+(S.nm?S.nm+' ':'')+'출산 준비 노트</span>';document.getElementById('wkb').textContent='현재 '+c+'주차';document.getElementById('blft').textContent=wl();bSB(c);bPL(c);uProg();var n=D.find(function(x){return c>x.w-4&&c<=x.w;})||D[0];var el=document.getElementById('p'+n.w);if(el){el.classList.add('open');setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},120);}}
+window.init = function init(){
+  // 앱 진입 후 최초 1회 저장 안내 팝업
+  if(!window._fbUser && !localStorage.getItem('bv4_popup_seen')){
+    setTimeout(function(){
+      var sp=document.getElementById('storePopup');
+      if(sp) sp.classList.add('on');
+    }, 800);
+  }
+  var c=cw();document.querySelector('.brand').innerHTML='<span style="color:var(--rose)" id="brandName">'+(S.nm?S.nm+' ':'')+'출산 준비 노트</span>';document.getElementById('wkb').textContent='현재 '+c+'주차';document.getElementById('blft').textContent=wl();bSB(c);bPL(c);uProg();var n=D.find(function(x){return c>x.w-4&&c<=x.w;})||D[0];var el=document.getElementById('p'+n.w);if(el){el.classList.add('open');setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},120);}}
 function bSB(c){var sb=document.getElementById('sb'),h='',G=[{l:'1삼분기',ws:[4,8,12]},{l:'2삼분기',ws:[16,20,24]},{l:'3삼분기',ws:[28,32,36,40]}];G.forEach(function(g){h+='<div class="sgl">'+g.l+'</div>';g.ws.forEach(function(w){var wd=D.find(function(d){return d.w===w;});if(!wd)return;var ii=allIds(wd),dn=ii.filter(function(i){return S.chk[i];}).length,p=ii.length?dn/ii.length:0,ic=(c>w-4&&c<=w),r=10,ci=2*Math.PI*r;h+='<button class="si'+(ic?' cur':'')+'" onclick="gP('+w+')"><div class="sil"><div class="swn"><span class=\"swr\">'+(w-3)+'</span><span class=\"swt2\">~</span><span class=\"swm\">'+w+'</span></div><div class="swt">'+wd.tt+'</div></div><svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="'+(ic?'rgba(196,129,106,.2)':'rgba(107,93,79,.1)')+'" stroke-width="2.5"/><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="'+(p===1?'#6B8F71':(ic?'#C4816A':'#A8998A'))+'" stroke-width="2.5" stroke-dasharray="'+ci+'" stroke-dashoffset="'+(ci*(1-p))+'" transform="rotate(-90 14 14)" stroke-linecap="round"/></svg></button>';});h+='<div class="sdiv"></div>';});sb.innerHTML=h;}
 function bPL(c){var ct=document.getElementById('pls'),h='';D.forEach(function(wd){var ii=allIds(wd),dn=ii.filter(function(i){return S.chk[i];}).length,p=ii.length?Math.round(dn/ii.length*100):0,ad=dn===ii.length&&ii.length>0,ic=(c>wd.w-4&&c<=wd.w),ck=Object.keys(wd.cats);h+='<div class="pl'+(ad?' da':'')+'" id="p'+wd.w+'"><div class="ph" onclick="tP('+wd.w+')"><div class="phl"><div class="pwn"><span class=\"wr\">'+(wd.w-3)+'</span><span class=\"wt\">~</span><span class=\"wm\">'+wd.w+'</span></div><div>'+(ic?'<div class="cl">▶ 현재 주차</div>':'')+'<div class="pt">'+wd.tt+'</div><div class="pd">'+wd.ds+'</div></div></div><div class="phr"><div class="db">✓ 완료</div><div class="mc" id="c'+wd.w+'">'+dn+'/'+ii.length+'</div><div class="mbw"><div class="mb" id="b'+wd.w+'" style="width:'+p+'%"></div></div></div></div><div class="pb"><div class="pdiv"></div><div class="bc"><span class="be">'+wd.be+'</span><div class="bi"><strong>이번 주 아기</strong>'+wd.bt+'</div></div><div class="cts" id="ts'+wd.w+'">';ck.forEach(function(k,i){h+='<button class="ct'+(i===0?' a':'')+'" data-cat="'+k+'" onclick="sC('+wd.w+',\''+encodeURIComponent(k)+'\',this)">'+k+'</button>';});h+='<button class="ct" onclick="sC('+wd.w+',\'__custom__\',this)">✏️ 내 항목</button>';h+='</div>';ck.forEach(function(k,i){var cid='v'+wd.w+'_'+i;h+='<div class="cv'+(i===0?' on':'')+'" id="'+cid+'">';wd.cats[k].forEach(function(tk){if(S.deleted&&S.deleted[tk.id])return;h+=tHTML(tk,wd.w);});h+='</div>';});var cx=S.custom[wd.w]||[];var custId='v'+wd.w+'__custom__';h+='<div class="cv" id="'+custId+'">';cx.forEach(function(tk){h+=tHTML(tk,wd.w,true);});h+='<div class="add-row"><input class="add-inp" id="ai'+wd.w+'" placeholder="항목 직접 추가..." onkeydown="if(event.key===\'Enter\')addTask('+wd.w+')"><button class="add-btn" onclick="addTask('+wd.w+')">+ 추가</button></div></div>';h+='<div class="tip"><div class="tl">💡 부모 TIP</div>'+wd.tip+'</div></div></div>';});ct.innerHTML=h;}
 // BUG FIX 1: del-btn uses event.stopPropagation to prevent ti click
@@ -999,15 +1010,13 @@ window.onload=function(){
       if(s&&s.edd){S=s;if(!S.custom)S.custom={};if(!S.deleted)S.deleted={};
         document.getElementById('cover').style.display='none';
         document.getElementById('app').style.display='block';
+        var ah=document.querySelector('.ah');if(ah)ah.style.display='';
         init();
       }
       // 로그인 버튼 표시
       var ab=document.getElementById('authBtn');
       if(ab) ab.style.display='flex';
-      // 저장 안내 팝업 (비로그인 시)
-      if(!localStorage.getItem('bv4_popup_seen')){
-        setTimeout(function(){document.getElementById('storePopup').classList.add('on');},800);
-      }
+      // 저장 안내 팝업은 앱 진입 후 표시 (init에서 처리)
     }
   }, 1500);
 };

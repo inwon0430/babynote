@@ -61,9 +61,9 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 }
 .ah{background:var(--paper);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;padding:0 16px;display:block}
 .ahi{max-width:960px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:0}
-.ahi-row1{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;padding:7px 0 4px}
+.ahi-row1{display:flex;align-items:center;justify-content:center;width:100%;padding:7px 0 4px}
 .ahi-row2{display:flex;align-items:center;gap:6px;width:100%;padding:0 0 6px}
-.brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1}
+.brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-align:center}
 .brand span{color:var(--rose)}
 .hpct{display:none}
 .hright{display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -402,27 +402,25 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 
 <header class="ah">
   <div class="ahi">
-    <!-- 1행: 브랜드(왼쪽) + 로그인(오른쪽) -->
+    <!-- 1행: 타이틀 중앙정렬 -->
     <div class="ahi-row1">
       <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
-      <div class="ahi-right">
-        <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
-        <div class="auth-user-info" id="authUserInfo" style="position:relative">
-          <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
-          <div class="auth-dropdown" id="authDropdown">
-            <div class="auth-dropdown-name" id="authUserName"></div>
-            <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
-          </div>
-        </div>
-      </div>
     </div>
-    <!-- 2행: 주차·사용법·삭제기록·지원금·홈 -->
+    <!-- 2행: 주차·사용법·삭제기록·지원금·홈·로그인 -->
     <div class="ahi-row2">
       <div class="wb" id="wkb">— 주차</div>
       <button class="hist-btn" onclick="showHelp()">? 사용법</button>
       <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
       <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
+      <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
+      <div class="auth-user-info" id="authUserInfo" style="position:relative">
+        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
+        <div class="auth-dropdown" id="authDropdown">
+          <div class="auth-dropdown-name" id="authUserName"></div>
+          <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>

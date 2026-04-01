@@ -126,8 +126,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <!-- 헤더 -->
 <header class="hd">
   <div class="hdi">
-    <a class="hd-logo" href="index.html">우리 아기 <span>준비 노트</span></a>
-    <a class="hd-back" href="index.html">← 베이비노트로</a>
+    <a class="hd-back" href="index.html">← 우리 아기 준비 노트로 돌아가기</a>
   </div>
 </header>
 
@@ -180,6 +179,12 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       <div class="calc-result-sub" id="totalNote">지자체 지원금 별도 · 육아휴직 6개월 기준</div>
     </div>
 
+    <div id="daycareMsg" style="display:none;margin-top:12px;background:var(--sp);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--mid);line-height:1.8;border-left:3px solid var(--sage)">
+      💡 <strong style="color:var(--ink)">어린이집 이용 시 지원 방식</strong><br>
+      부모급여에서 보육료를 차감한 <strong>차액만 현금</strong>으로 받아요.<br>
+      보육료(월 48~54만원)는 <strong>어린이집에 직접 지급</strong>되니 실제로 돈이 나가는 건 아니에요 😊<br>
+      <span style="font-size:11px;color:var(--lt)">0세 기준: 부모급여 100만원 - 보육료 약 54만원 = 현금 약 46만원</span>
+    </div>
     <div class="calc-breakdown" id="breakdown"></div>
   </div>
 
@@ -520,9 +525,18 @@ function calcTotal(){
 
   var noteArr = [];
   if(leave === 'yes') noteArr.push('육아휴직 12개월 기준');
-  if(care === 'daycare') noteArr.push('어린이집 이용 기준');
   noteArr.push('지자체 지원금 별도');
   document.getElementById('totalNote').textContent = noteArr.join(' · ');
+
+  // 어린이집 이용 시 안내 메시지
+  var daycareMsg = document.getElementById('daycareMsg');
+  if(daycareMsg){
+    if(care === 'daycare'){
+      daycareMsg.style.display = 'block';
+    } else {
+      daycareMsg.style.display = 'none';
+    }
+  }
 
   // 항목별 내역
   document.getElementById('firstAmt').textContent =
@@ -531,10 +545,14 @@ function calcTotal(){
 
   var breakdown = [
     { name:'첫만남이용권', amt:first+'만원', note:'국민행복카드 바우처' },
-    { name:'부모급여', amt:'1,800만원', note:'0세 월100만·1세 월50만' },
+    { name:'부모급여', amt:'1,800만원', note: care==='home' ? '0세 월100만·1세 월50만' : '0세 월~46만·1세 월~2만 (차액 현금)' },
     { name:'아동수당', amt:Math.round(childAmt)+'만원~', note:'만 9세까지 합산' },
   ];
-  if(care === 'home') breakdown.push({ name:'양육수당', amt:'620만원', note:'24~85개월 월10만' });
+  if(care === 'home'){
+    breakdown.push({ name:'양육수당', amt:'620만원', note:'24~85개월 월10만' });
+  } else {
+    breakdown.push({ name:'보육료 바우처', amt:'월 48~54만원', note:'어린이집에 직접 지급' });
+  }
   if(leave === 'yes') breakdown.push({ name:'육아휴직급여', amt:'최대 2,100만원', note:'12개월 기준' });
 
   document.getElementById('breakdown').innerHTML = breakdown.map(function(b){

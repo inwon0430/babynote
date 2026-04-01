@@ -80,6 +80,9 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   .brand{flex:1;min-width:0;order:1}
   .hpct{order:2;flex-shrink:0;margin-right:0;align-items:flex-end}
   .hright{order:3;width:100%;margin-left:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;display:flex;gap:5px;padding-bottom:2px}
+  .ahi-right{gap:5px}
+  .icon-btn{width:26px;height:26px;font-size:12px}
+  .auth-avatar-btn{width:26px;height:26px}
   .hright::-webkit-scrollbar{display:none}
   .auth-btn-header{padding:4px 8px;font-size:11px}
   .auth-btn-text{display:none}
@@ -239,6 +242,10 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 .auth-logout:hover{border-color:var(--rose);color:var(--rose)}
 .auth-btn-header{background:var(--rose);color:#fff;border:none;border-radius:100px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;display:flex;align-items:center;gap:5px}
 .auth-btn-header:hover{background:#B87060}
+.ahi-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.icon-btn{width:28px;height:28px;background:none;border:1px solid var(--bd);border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:all .15s;flex-shrink:0}
+.icon-btn:hover{background:var(--rp);border-color:var(--rose)}
+.gold-btn{background:var(--gp)!important;color:var(--gold)!important;border-color:rgba(201,169,110,.3)!important;font-weight:700!important}
 .auth-avatar-btn{width:32px;height:32px;border-radius:50%;background:var(--rose);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;padding:0}
 .auth-avatar-btn img{width:32px;height:32px;border-radius:50%;object-fit:cover}
 .auth-dropdown{display:none;position:fixed;top:auto;right:8px;background:var(--paper);border:1px solid var(--bd);border-radius:12px;padding:10px;min-width:150px;box-shadow:0 4px 24px rgba(0,0,0,.18);z-index:9999;white-space:nowrap}
@@ -397,16 +404,16 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <div id="app" class="app">
   <header class="ah">
     <div class="ahi">
-      <!-- 1행: 브랜드 + 진행률 + 홈 + 로그인 -->
+      <!-- 1행: 브랜드 + 진행률 + 홈 + 아바타 -->
       <div class="ahi-row1">
         <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
-        <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+        <div class="ahi-right">
           <div class="hpct">
             <div class="pct" id="pct">0%</div>
             <div class="pcl">전체 진행률</div>
           </div>
-          <button class="hbtn" onclick="goHome()" title="홈">🏠</button>
-          <button class="auth-btn-header" id="authBtn" onclick="showAuthModal()" style="display:flex;padding:4px 8px" title="로그인">🔑</button>
+          <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
+          <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
           <div class="auth-user-info" id="authUserInfo" style="position:relative">
             <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
             <div class="auth-dropdown" id="authDropdown">
@@ -421,7 +428,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
         <div class="wb" id="wkb">— 주차</div>
         <button class="hist-btn" onclick="showHelp()">? 사용법</button>
         <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
-        <a href="benefit.html" class="hist-btn" style="text-decoration:none;background:var(--gp);color:var(--gold);border-color:rgba(201,169,110,.3);font-weight:700">💰 지원금</a>
+        <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       </div>
     </div>
   </header>

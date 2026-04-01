@@ -397,27 +397,31 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <div id="app" class="app">
   <header class="ah">
     <div class="ahi">
+      <!-- 1행: 브랜드 + 진행률 + 홈 + 로그인 -->
       <div class="ahi-row1">
         <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
-        <div class="hpct">
-          <div class="pct" id="pct">0%</div>
-          <div class="pcl">전체 진행률</div>
+        <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+          <div class="hpct">
+            <div class="pct" id="pct">0%</div>
+            <div class="pcl">전체 진행률</div>
+          </div>
+          <button class="hbtn" onclick="goHome()" title="홈">🏠</button>
+          <button class="auth-btn-header" id="authBtn" onclick="showAuthModal()" style="display:flex;padding:4px 8px" title="로그인">🔑</button>
+          <div class="auth-user-info" id="authUserInfo" style="position:relative">
+            <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
+            <div class="auth-dropdown" id="authDropdown">
+              <div class="auth-dropdown-name" id="authUserName"></div>
+              <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- 2행: 주차 + 기능 버튼들 -->
       <div class="hright">
         <div class="wb" id="wkb">— 주차</div>
         <button class="hist-btn" onclick="showHelp()">? 사용법</button>
         <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
-        <a class="home-btn" href="benefit.html" style="text-decoration:none">💰 지원금</a>
-        <button class="home-btn" onclick="goHome()">🏠 홈</button>
-        <button class="auth-btn-header" id="authBtn" onclick="showAuthModal()" style="display:flex"><span class="auth-btn-icon">🔑</span><span class="auth-btn-text"> 로그인</span></button>
-        <div class="auth-user-info" id="authUserInfo" style="position:relative">
-          <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
-          <div class="auth-dropdown" id="authDropdown">
-            <div class="auth-dropdown-name" id="authUserName"></div>
-            <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
-          </div>
-        </div>
+        <a href="benefit.html" class="hist-btn" style="text-decoration:none;background:var(--gp);color:var(--gold);border-color:rgba(201,169,110,.3);font-weight:700">💰 지원금</a>
       </div>
     </div>
   </header>

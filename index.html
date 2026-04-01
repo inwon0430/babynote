@@ -59,10 +59,10 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 @media(max-width:660px){
   .am{grid-template-columns:1fr;padding:16px 12px 76px}
 }
-.ah{background:var(--paper);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;padding:0 16px}
-.ahi{max-width:940px;margin:0 auto;height:54px;display:flex;align-items:center;gap:10px}
-.ahi-row1{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px}
-.ahi-row2{display:flex;align-items:center;gap:6px;width:100%}
+.ah{background:var(--paper);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;padding:0 16px;display:block}
+.ahi{max-width:960px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:0}
+.ahi-row1{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;padding:7px 0 4px}
+.ahi-row2{display:flex;align-items:center;gap:6px;width:100%;padding:0 0 6px}
 .brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1}
 .brand span{color:var(--rose)}
 .hpct{display:none}
@@ -81,7 +81,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   .brand{flex:1;min-width:0;order:1}
   .hpct{order:2;flex-shrink:0;margin-right:0;align-items:flex-end}
   .hright{order:3;width:100%;margin-left:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;display:flex;gap:5px;padding-bottom:2px}
-  .ahi-right{gap:5px}
+  .ahi-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
   .icon-btn{width:26px;height:26px;font-size:12px}
   .auth-avatar-btn{width:26px;height:26px}
   .hright::-webkit-scrollbar{display:none}
@@ -403,33 +403,33 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   </div>
 </div>
 
-<div id="app" class="app">
-  <header class="ah">
-    <div class="ahi">
-      <!-- 1행: 브랜드(왼쪽) + 로그인(오른쪽) -->
-      <div class="ahi-row1">
-        <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
-        <div class="ahi-right">
-          <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
-          <div class="auth-user-info" id="authUserInfo" style="position:relative">
-            <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
-            <div class="auth-dropdown" id="authDropdown">
-              <div class="auth-dropdown-name" id="authUserName"></div>
-              <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
-            </div>
+<header class="ah">
+  <div class="ahi">
+    <!-- 1행: 브랜드(왼쪽) + 로그인(오른쪽) -->
+    <div class="ahi-row1">
+      <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
+      <div class="ahi-right">
+        <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
+        <div class="auth-user-info" id="authUserInfo" style="position:relative">
+          <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
+          <div class="auth-dropdown" id="authDropdown">
+            <div class="auth-dropdown-name" id="authUserName"></div>
+            <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
           </div>
         </div>
       </div>
-      <!-- 2행: 주차·사용법·삭제기록·지원금·홈 -->
-      <div class="ahi-row2">
-        <div class="wb" id="wkb">— 주차</div>
-        <button class="hist-btn" onclick="showHelp()">? 사용법</button>
-        <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
-        <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
-        <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
-      </div>
     </div>
-  </header>
+    <!-- 2행: 주차·사용법·삭제기록·지원금·홈 -->
+    <div class="ahi-row2">
+      <div class="wb" id="wkb">— 주차</div>
+      <button class="hist-btn" onclick="showHelp()">? 사용법</button>
+      <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
+      <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
+      <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
+    </div>
+  </div>
+</header>
+<div id="app" class="app">
   <div class="am">
     <aside class="sb" id="sb"></aside>
     <div class="pls" id="pls"></div>
@@ -749,7 +749,7 @@ function goHome(){
   var ah = document.querySelector('.ah');
   if(ah) ah.style.display='none';
 }
-function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';var ah=document.querySelector('.ah');if(ah)ah.style.display='none';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
+function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
 function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';init();}
 function cw(){if(!S.edd)return 20;var e=new Date(S.edd),l=new Date(e-280*864e5),d=Math.floor((new Date()-l)/864e5);return Math.max(1,Math.min(42,Math.floor(d/7)));}
 function wl(){if(!S.edd)return'—';var d=Math.floor((new Date(S.edd)-new Date())/864e5);if(d<0)return'🎉 출산 완료';return Math.floor(d/7)+'주 '+d%7+'일';}
@@ -770,6 +770,9 @@ function allIds(wd){
   return r;
 }
 window.init = function init(){
+  // 헤더 항상 보이기
+  var ah = document.querySelector('.ah');
+  if(ah) ah.style.display='';
   showDailyMsg();
   // 앱 진입 후 최초 1회 저장 안내 팝업
   if(!window._fbUser && !localStorage.getItem('bv4_popup_seen')){
@@ -1021,6 +1024,9 @@ function resetAll(){
 }
 // BUG FIX 3: use baby name in header brand and week badge
 window.onload=function(){
+  // 헤더 항상 표시 (커버/셋업/앱 모두)
+  var ah=document.querySelector('.ah');
+  if(ah) ah.style.display='';
   // Firebase onAuthStateChanged가 처리하므로 비로그인 시만 localStorage 사용
   setTimeout(function(){
     if(!window._fbUser){

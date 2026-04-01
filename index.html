@@ -62,6 +62,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 .ah{background:var(--paper);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;padding:0 16px}
 .ahi{max-width:940px;margin:0 auto;height:54px;display:flex;align-items:center;gap:10px}
 .ahi-row1{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px}
+.ahi-row2{display:flex;align-items:center;gap:6px;width:100%}
 .brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1}
 .brand span{color:var(--rose)}
 .hpct{display:none}
@@ -405,13 +406,10 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <div id="app" class="app">
   <header class="ah">
     <div class="ahi">
+      <!-- 1행: 브랜드(왼쪽) + 홈·로그인(오른쪽) -->
       <div class="ahi-row1">
         <div class="brand">우리 아기 <span id="brandName">준비 노트</span></div>
         <div class="ahi-right">
-          <div class="wb" id="wkb">— 주차</div>
-          <button class="hist-btn" onclick="showHelp()">? 사용법</button>
-          <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
-          <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
           <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
           <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
           <div class="auth-user-info" id="authUserInfo" style="position:relative">
@@ -422,6 +420,13 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
             </div>
           </div>
         </div>
+      </div>
+      <!-- 2행: 주차·사용법·삭제기록·지원금 -->
+      <div class="ahi-row2">
+        <div class="wb" id="wkb">— 주차</div>
+        <button class="hist-btn" onclick="showHelp()">? 사용법</button>
+        <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
+        <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       </div>
     </div>
   </header>

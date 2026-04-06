@@ -997,7 +997,35 @@ function delTask(id,w,isCustom){
 }
 function uW(w){var wd=D.find(function(d){return d.w===w;});if(!wd)return;var ii=allIds(wd),dn=ii.filter(function(i){return S.chk[i];}).length,p=ii.length?Math.round(dn/ii.length*100):0;var ce=document.getElementById('c'+w),be=document.getElementById('b'+w),pe=document.getElementById('p'+w);if(ce)ce.textContent=dn+'/'+ii.length;if(be)be.style.width=p+'%';if(pe)pe.classList.toggle('da',dn===ii.length&&ii.length>0);bSB(cw());}
 function uProg(){var ii=D.reduce(function(a,w){return a.concat(allIds(w));},[]),dn=ii.filter(function(i){return S.chk[i];}).length,p=ii.length?Math.round(dn/ii.length*100):0;document.getElementById('pct').textContent=p+'%';document.getElementById('bdn').textContent=dn;document.getElementById('btl').textContent=ii.length;}
-function openRec(key){var r=RECS[key];if(!r)return;document.getElementById('recTitle').textContent='🛒 '+key+' 추천';document.getElementById('recSub').textContent=r.sub;var h='';r.items.forEach(function(item){h+='<div class="prod-card"><div class="prod-emoji">'+item.e+'</div><div class="prod-info"><div class="prod-name">'+item.n+'</div><div class="prod-desc">'+item.d+'</div><a class="prod-link" href="'+item.url+'" target="_top">제품 보러가기 →</a></div></div>';});document.getElementById('recList').innerHTML=h;document.getElementById('recModal').classList.add('on');}
+function trackClick(n,c){
+  if(typeof gtag!=='undefined'){
+    gtag('event','coupang_click',{'event_category':'추천제품','event_label':n,'product_category':c});
+  }
+}
+function openRec(key){
+  var r=RECS[key];
+  if(!r) return;
+  document.getElementById('recTitle').textContent='🛒 '+key+' 추천';
+  document.getElementById('recSub').textContent=r.sub;
+  var html='';
+  r.items.forEach(function(item){
+    html+='<div class="prod-card">';
+    html+='<div class="prod-emoji">'+item.e+'</div>';
+    html+='<div class="prod-info">';
+    html+='<div class="prod-name">'+item.n+'</div>';
+    html+='<div class="prod-desc">'+item.d+'</div>';
+    html+='<a class="prod-link" href="'+item.url+'" target="_top" data-pname="'+item.n.replace(/"/g,'&quot;')+'" data-pcat="'+key+'">제품 보러가기 →</a>';
+    html+='</div></div>';
+  });
+  document.getElementById('recList').innerHTML=html;
+  document.getElementById('recModal').classList.add('on');
+  // 링크 클릭 추적
+  document.querySelectorAll('#recList .prod-link').forEach(function(a){
+    a.addEventListener('click',function(){
+      trackClick(this.getAttribute('data-pname'), this.getAttribute('data-pcat'));
+    });
+  });
+}
 function closeRec(){document.getElementById('recModal').classList.remove('on');}
 document.getElementById('recModal').addEventListener('click',function(e){if(e.target===this)closeRec();});
 function confirmReset(){

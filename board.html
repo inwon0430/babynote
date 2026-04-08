@@ -205,7 +205,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <header class="ah">
   <div class="ahi">
     <div class="ahi-row1">
-      <a href="index.html" class="brand">← 아꼼 출산 준비 노트로 돌아가기</a>
+      <a href="index.html" class="brand">← 출산 준비 노트로 돌아가기</a>
     </div>
     <div class="ahi-row2">
       <div class="wb" id="wkb" style="display:none">— 주차</div>
@@ -660,22 +660,47 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
   };
 });
 
-// ── 주차 배지 (localStorage에서 읽기) ──
+// ── 카테고리 필터 ──
+document.getElementById('detailModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('detailModal')) closeDetail();
+});
+document.getElementById('writeModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('writeModal')) closeWriteModal();
+});
+document.getElementById('authModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('authModal')) closeAuthModal();
+});
+
+// ── XSS 방지 ──
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<script>
+// ── 헤더 초기화 (localStorage에서 주차·태명 읽기) ──
 (function(){
   try {
     var s = JSON.parse(localStorage.getItem('bv4') || '{}');
+    // 주차 배지
     if (s.edd) {
       var e = new Date(s.edd);
       var l = new Date(e - 280 * 864e5);
       var d = Math.floor((new Date() - l) / 864e5);
       var w = Math.max(1, Math.min(42, Math.floor(d / 7)));
-      var el = document.getElementById('wkb');
-      if (el) { el.textContent = '현재 ' + w + '주차'; el.style.display = ''; }
+      var wkb = document.getElementById('wkb');
+      if (wkb) { wkb.textContent = '현재 ' + w + '주차'; wkb.style.display = ''; }
     }
-  } catch(e) {}
+    // 태명 → 돌아가기 버튼
+    var brandEl = document.querySelector('.brand');
+    if (brandEl) {
+      var label = s.nm ? '← ' + s.nm + ' 출산 준비 노트로 돌아가기' : '← 출산 준비 노트로 돌아가기';
+      brandEl.textContent = label;
+    }
+  } catch(e2) {}
 })();
 
-// ── 헤더 함수 (index와 동일) ──
+// ── 헤더 함수 (일반 script — module 밖에서 전역으로) ──
 function showHelp(){ document.getElementById('help-modal').style.display='flex'; }
 function goHome(){ window.location.href='index.html'; }
 function showAuthModal(){ document.getElementById('authModal').classList.add('on'); }
@@ -697,19 +722,19 @@ function doEmailAuth(){
   if(!isLogin){
     var pwc=document.getElementById('authPwConfirm').value;
     if(pw!==pwc){showAuthErr('비밀번호가 일치하지 않아요.');return;}
-    createUserWithEmailAndPassword(auth,email,pw).then(closeAuthModal).catch(e=>showAuthErr(getAuthErrMsg(e.code)));
+    window._bFns && window._bFns.createUserWithEmailAndPassword(window._bAuth,email,pw).then(closeAuthModal).catch(function(e){showAuthErr(getAuthErrMsg(e.code));});
   } else {
-    signInWithEmailAndPassword(auth,email,pw).then(closeAuthModal).catch(e=>showAuthErr(getAuthErrMsg(e.code)));
+    window._bFns && window._bFns.signInWithEmailAndPassword(window._bAuth,email,pw).then(closeAuthModal).catch(function(e){showAuthErr(getAuthErrMsg(e.code));});
   }
 }
 function doGoogleLogin(){
-  signInWithPopup(auth,provider).then(closeAuthModal).catch(e=>showAuthErr(getAuthErrMsg(e.code)));
+  window._bFns && window._bFns.signInWithPopup(window._bAuth,window._bProvider).then(closeAuthModal).catch(function(e){showAuthErr(getAuthErrMsg(e.code));});
 }
 function doLogout(){
   if(!confirm('로그아웃 하시겠어요?'))return;
   var dd=document.getElementById('authDropdown');
-  if(dd)dd.classList.remove('on');
-  signOut(auth);
+  if(dd) dd.classList.remove('on');
+  window._bFns && window._bFns.signOut(window._bAuth);
 }
 function getAuthErrMsg(code){
   var msgs={'auth/email-already-in-use':'이미 사용 중인 이메일이에요.','auth/invalid-email':'이메일 형식이 올바르지 않아요.','auth/weak-password':'비밀번호는 6자 이상이어야 해요.','auth/user-not-found':'등록되지 않은 이메일이에요.','auth/wrong-password':'비밀번호가 틀렸어요.','auth/invalid-credential':'이메일 또는 비밀번호가 올바르지 않아요.','auth/popup-closed-by-user':'로그인 창이 닫혔어요.','auth/too-many-requests':'잠시 후 다시 시도해주세요.'};
@@ -723,24 +748,8 @@ function toggleUserMenu(){
   dd.classList.toggle('on');
   if(!isOn){
     function closeDD(e){var info=document.getElementById('authUserInfo');if(info&&!info.contains(e.target)){dd.classList.remove('on');document.removeEventListener('click',closeDD);}}
-    setTimeout(()=>document.addEventListener('click',closeDD),50);
+    setTimeout(function(){document.addEventListener('click',closeDD);},50);
   }
-}
-
-// 모달 배경 클릭 닫기
-document.getElementById('detailModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('detailModal')) closeDetail();
-});
-document.getElementById('writeModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('writeModal')) closeWriteModal();
-});
-document.getElementById('authModal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('authModal')) closeAuthModal();
-});
-
-// ── XSS 방지 ──
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>

@@ -173,7 +173,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <header class="ah">
   <div class="ahi">
     <div class="ahi-row1">
-      <a href="index.html" class="brand">← 아꼼 출산 준비 노트로 돌아가기</a>
+      <a href="index.html" class="brand">← 출산 준비 노트로 돌아가기</a>
     </div>
     <div class="ahi-row2">
       <div class="wb" id="wkb" style="display:none">— 주차</div>
@@ -744,7 +744,7 @@ window._bFns={signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndP
 </script>
 
 <script>
-// ── 주차 배지 (localStorage에서 읽기) ──
+// ── 헤더 초기화 (localStorage에서 주차·태명 읽기) ──
 (function(){
   try {
     var s = JSON.parse(localStorage.getItem('bv4') || '{}');
@@ -755,6 +755,11 @@ window._bFns={signInWithPopup,signInWithEmailAndPassword,createUserWithEmailAndP
       var w = Math.max(1, Math.min(42, Math.floor(d / 7)));
       var el = document.getElementById('wkb');
       if (el) { el.textContent = '현재 ' + w + '주차'; el.style.display = ''; }
+    }
+    var brandEl = document.querySelector('.brand');
+    if (brandEl) {
+      var label = s.nm ? '← ' + s.nm + ' 출산 준비 노트로 돌아가기' : '← 출산 준비 노트로 돌아가기';
+      brandEl.textContent = label;
     }
   } catch(e) {}
 })();

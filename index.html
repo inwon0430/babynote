@@ -331,7 +331,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 
   // ── 로그인 상태 감지 ──
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
+    if (user && !user.isAnonymous) {
       window._fbUser = user;
       // Firestore에서 데이터 로드
       try {
@@ -351,6 +351,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           }
           if (!window.S.custom) window.S.custom = {};
           if (!window.S.deleted) window.S.deleted = {};
+          if (!window.S.chk) window.S.chk = {};
         }
       } catch(e) { console.error('Firestore load error:', e); }
 
@@ -384,6 +385,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       }
       applyUserUI();
     } else {
+      // 비로그인 또는 익명 — localStorage에서 불러오기
       window._fbUser = null;
       var btnEl2 = document.getElementById('authBtn');
       var infoEl2 = document.getElementById('authUserInfo');
@@ -716,9 +718,9 @@ function ld(){try{var r=localStorage.getItem(K);return r?JSON.parse(r):null;}cat
 function sv(){
   try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}
   // Firestore 저장 (로그인 시)
-  if(window._fbUser && window._fbDb && window._fbFns){
+  if(window._fbUser && !window._fbUser.isAnonymous && window._fbDb && window._fbFns){
     var ref=window._fbFns.doc(window._fbDb,'users',window._fbUser.uid);
-    window._fbFns.setDoc(ref, JSON.parse(JSON.stringify(S))).catch(function(e){console.error('Firestore save error:',e);});
+    window._fbFns.setDoc(ref, JSON.parse(JSON.stringify(S)), {merge:true}).catch(function(e){console.error('Firestore save error:',e);});
   }
 }
 function showHelp(){

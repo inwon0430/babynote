@@ -183,9 +183,9 @@ a{font-family:inherit}
       <a href="board.html" class="hist-btn" style="text-decoration:none">💬 커뮤니티</a>
       <a href="benefit.html" class="hist-btn gold-btn active" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
-      <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
-      <div class="auth-user-info" id="authUserInfo">
-        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
+      <button class="icon-btn" id="authBtn" onclick="showAuthModal()" title="로그인">🔑</button>
+      <div class="auth-user-info" id="authUserInfo" style="display:none">
+        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()"></button>
         <div class="auth-dropdown" id="authDropdown">
           <div class="auth-dropdown-name" id="authUserName"></div>
           <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>

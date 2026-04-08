@@ -355,7 +355,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       var dd2 = document.getElementById('authDropdown');
       if(btnEl2) btnEl2.style.display = 'flex';
       if(infoEl2) infoEl2.style.display = 'none';
-      if(av2){ av2.innerHTML = ''; av2.textContent = '?'; }
+      if(av2){ av2.innerHTML = ''; av2.textContent = ''; }
       if(dd2) dd2.classList.remove('on');
     }
   });
@@ -420,8 +420,8 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
       <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
-      <div class="auth-user-info" id="authUserInfo" style="position:relative">
-        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
+      <div class="auth-user-info" id="authUserInfo" style="display:none;position:relative">
+        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()"></button>
         <div class="auth-dropdown" id="authDropdown">
           <div class="auth-dropdown-name" id="authUserName"></div>
           <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>

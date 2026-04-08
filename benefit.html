@@ -8,6 +8,39 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<!-- 로그인 상태 즉시 복원 (Firebase 로드 전 깜빡임 방지) -->
+<script>
+(function(){
+  try {
+    var fbKey = Object.keys(localStorage).find(function(k){
+      return k.startsWith('firebase:authUser:');
+    });
+    if (fbKey) {
+      var u = JSON.parse(localStorage.getItem(fbKey));
+      if (u && u.uid) {
+        var initial = u.displayName ? u.displayName[0].toUpperCase()
+                    : u.email ? u.email[0].toUpperCase() : 'U';
+        document.addEventListener('DOMContentLoaded', function(){
+          var authBtn = document.getElementById('authBtn');
+          var authUserInfo = document.getElementById('authUserInfo');
+          var authAvatar = document.getElementById('authAvatar');
+          var authUserName = document.getElementById('authUserName');
+          if (authBtn) authBtn.style.display = 'none';
+          if (authUserInfo) authUserInfo.style.display = 'flex';
+          if (authUserName) authUserName.textContent = u.displayName || u.email || '사용자';
+          if (authAvatar) {
+            if (u.photoURL) {
+              authAvatar.innerHTML = '<img src="' + u.photoURL + '">';
+            } else {
+              authAvatar.textContent = initial;
+            }
+          }
+        });
+      }
+    }
+  } catch(e) {}
+})();
+</script>
 <style>
 :root{--bg:#F7F3EE;--paper:#FDFAF6;--ink:#2B2218;--mid:#6B5D4F;--lt:#A8998A;--rose:#C4816A;--rp:#F5E4DC;--sage:#6B8F71;--sp:#E4EFE5;--gold:#C9A96E;--gp:#F5EDD8;--bd:rgba(107,93,79,0.12)}
 *{margin:0;padding:0;box-sizing:border-box}

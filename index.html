@@ -263,6 +263,42 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   gtag('js', new Date());
   gtag('config', 'G-1PF2E01VPH');
 </script>
+<!-- 로그인 상태 즉시 복원 (Firebase 로드 전 깜빡임 방지) -->
+<script>
+(function(){
+  try {
+    // Firebase Auth가 localStorage에 캐싱하는 키 찾기
+    var fbKey = Object.keys(localStorage).find(function(k){
+      return k.startsWith('firebase:authUser:');
+    });
+    if (fbKey) {
+      var u = JSON.parse(localStorage.getItem(fbKey));
+      if (u && u.uid) {
+        // 로그인 상태 — 아바타 즉시 표시
+        var initial = u.displayName ? u.displayName[0].toUpperCase()
+                    : u.email ? u.email[0].toUpperCase() : 'U';
+        // body 로드 전이므로 DOMContentLoaded 후 적용
+        document.addEventListener('DOMContentLoaded', function(){
+          var authBtn = document.getElementById('authBtn');
+          var authUserInfo = document.getElementById('authUserInfo');
+          var authAvatar = document.getElementById('authAvatar');
+          var authUserName = document.getElementById('authUserName');
+          if (authBtn) authBtn.style.display = 'none';
+          if (authUserInfo) authUserInfo.style.display = 'flex';
+          if (authUserName) authUserName.textContent = u.displayName || u.email || '사용자';
+          if (authAvatar) {
+            if (u.photoURL) {
+              authAvatar.innerHTML = '<img src="' + u.photoURL + '">';
+            } else {
+              authAvatar.textContent = initial;
+            }
+          }
+        });
+      }
+    }
+  } catch(e) {}
+})();
+</script>
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";

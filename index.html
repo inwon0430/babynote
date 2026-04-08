@@ -1155,10 +1155,11 @@ function doLogout(){
   var dd=document.getElementById('authDropdown');
   if(dd) dd.classList.remove('on');
   window._fbFns.signOut(window._fbAuth).then(function(){
-    // onAuthStateChanged가 UI 처리하므로 여기선 앱 상태만 초기화
     document.getElementById('app').style.display='none';
     document.getElementById('cover').style.display='flex';
     document.getElementById('setup').style.display='none';
+    var ah=document.querySelector('.ah');
+    if(ah) ah.style.display='none';
     S={edd:null,nm:'',chk:{},custom:{},deleted:{}};
   });
 }

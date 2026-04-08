@@ -445,7 +445,7 @@ onAuthStateChanged(auth, async (user) => {
     }
     const nick = user.displayName || user.email.split('@')[0];
     const wNick = document.getElementById('wNick');
-    if (wNick) { wNick.value = nick; wNick.readOnly = true; }
+    if (wNick) { wNick.value = nick; wNick.readOnly = false; }
   } else {
     if (!user) { try { await signInAnonymously(auth); } catch(e) {} }
     currentUser = auth.currentUser;
@@ -540,6 +540,7 @@ window.openDetail = async (postId) => {
   const post = {id:postSnap.id, ...postSnap.data()};
   const cat = CAT[post.cat] || {label:post.cat, cls:'qna'};
   const isOwner = currentUser && (currentUser.uid === post.uid);
+  const isAdmin = currentUser && currentUser.uid === 'uWjkhnrQgvdRDoKn5StQ2Bc0K4R2';
   const liked = currentUser && post.likes && post.likes.includes(currentUser.uid);
 
   // 댓글 로드
@@ -560,7 +561,7 @@ window.openDetail = async (postId) => {
       <button class="like-btn ${liked?'liked':''}" id="likeBtn" onclick="toggleLike('${postId}')">
         ❤️ <span id="likeCnt">${post.likeCount||0}</span>
       </button>
-      ${isOwner ? `<button class="delete-btn" onclick="deletePost('${postId}')">삭제</button>` : ''}
+      ${(isOwner || isAdmin) ? `<button class="delete-btn" onclick="deletePost('${postId}')">${isAdmin && !isOwner ? '🗑 관리자삭제' : '삭제'}</button>` : ''}
     </div>
     <div class="comment-section">
       <h3>댓글 ${cmts.length}개</h3>
@@ -576,11 +577,12 @@ window.openDetail = async (postId) => {
 
 function renderComment(c, postId) {
   const isOwner = currentUser && currentUser.uid === c.uid;
+  const isAdmin = currentUser && currentUser.uid === 'uWjkhnrQgvdRDoKn5StQ2Bc0K4R2';
   return `<div class="comment-item" id="cmt-${c.id}">
     <div class="comment-top">
       <span class="comment-author">${c.nickname||'익명'}</span>
       <span class="comment-time">${timeAgo(c.createdAt)}</span>
-      ${isOwner ? `<button class="comment-delete" onclick="deleteComment('${postId}','${c.id}')">삭제</button>` : ''}
+      ${(isOwner || isAdmin) ? `<button class="comment-delete" onclick="deleteComment('${postId}','${c.id}')">${isAdmin && !isOwner ? '🗑' : '삭제'}</button>` : ''}
     </div>
     <div class="comment-text">${escHtml(c.text)}</div>
   </div>`;

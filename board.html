@@ -472,19 +472,26 @@ async function loadPosts(reset = false) {
 
   try {
     let q;
-    const constraints = [orderBy('createdAt','desc'), limit(PAGE_SIZE)];
-    if (currentCat !== 'all') constraints.unshift(where('cat','==',currentCat));
+    // 카테고리 필터는 클라이언트 사이드에서 처리 (복합 인덱스 불필요)
+    const constraints = [orderBy('createdAt','desc'), limit(PAGE_SIZE * 3)];
     if (lastDoc) constraints.push(startAfter(lastDoc));
     q = query(collection(db,'posts'), ...constraints);
 
     const snap = await getDocs(q);
-    const posts = [];
+    let posts = [];
     snap.forEach(d => posts.push({id:d.id, ...d.data()}));
+
+    // 클라이언트 사이드 카테고리 필터
+    if (currentCat !== 'all') {
+      posts = posts.filter(p => p.cat === currentCat);
+    }
+
     lastDoc = snap.docs[snap.docs.length-1] || null;
-    if (snap.docs.length < PAGE_SIZE) allLoaded = true;
+    if (snap.docs.length < PAGE_SIZE * 3) allLoaded = true;
 
     renderPosts(posts, reset);
   } catch(e) {
+    console.error('loadPosts error:', e);
     document.getElementById('postList').innerHTML =
       `<div class="empty-state"><div class="ei">⚠️</div><p>게시글을 불러오는 데 실패했어요.<br>잠시 후 다시 시도해주세요.</p></div>`;
   }

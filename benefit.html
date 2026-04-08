@@ -15,11 +15,15 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 
 /* ── 헤더 ── */
 .hd{background:var(--paper);border-bottom:1px solid var(--bd);padding:0 20px;position:sticky;top:0;z-index:100}
-.hdi{max-width:760px;margin:0 auto;height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.hd-logo{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);text-decoration:none}
-.hd-logo span{color:var(--gold)}
-.hd-back{font-size:12px;color:var(--lt);background:none;border:1px solid var(--bd);border-radius:100px;padding:4px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-decoration:none;display:flex;align-items:center;gap:4px}
-.hd-back:hover{border-color:var(--gold);color:var(--gold)}
+.hdi{max-width:760px;margin:0 auto;display:flex;flex-direction:column}
+.hdi-row1{display:flex;align-items:center;justify-content:space-between;padding:7px 0 4px}
+.hdi-row2{display:flex;align-items:center;gap:6px;padding:0 0 6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.hdi-row2::-webkit-scrollbar{display:none}
+.hd-back{font-size:12px;color:var(--lt);background:none;border:1px solid var(--bd);border-radius:100px;padding:4px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .2s}
+.hd-back:hover{border-color:var(--rose);color:var(--rose)}
+.hd-nav{background:none;border:1px solid var(--bd);border-radius:100px;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--lt);transition:all .2s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.hd-nav:hover{background:var(--rp);color:var(--rose);border-color:var(--rose)}
+.hd-nav.gold{background:var(--gp)!important;color:var(--gold)!important;border-color:rgba(201,169,110,.3)!important;font-weight:700!important}
 
 /* ── 히어로 ── */
 .hero{background:linear-gradient(135deg,#2B2218 0%,#3D3020 100%);padding:40px 20px;text-align:center}
@@ -126,7 +130,13 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <!-- 헤더 -->
 <header class="hd">
   <div class="hdi">
-    <a class="hd-back" href="index.html">← 우리 아기 준비 노트로 돌아가기</a>
+    <div class="hdi-row1">
+      <a class="hd-back" href="index.html">← 우리 아기 준비 노트</a>
+    </div>
+    <div class="hdi-row2">
+      <a href="benefit.html" class="hd-nav gold" style="text-decoration:none">💰 지원금</a>
+      <a href="board.html" class="hd-nav" style="text-decoration:none">💬 커뮤니티</a>
+    </div>
   </div>
 </header>
 

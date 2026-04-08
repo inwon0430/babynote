@@ -55,9 +55,9 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 
 
 
-.am{max-width:940px;margin:0 auto;padding:24px 18px 76px;display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:start}
+.am{max-width:940px;margin:0 auto;padding:24px 18px 110px;display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:start}
 @media(max-width:660px){
-  .am{grid-template-columns:1fr;padding:16px 12px 76px}
+  .am{grid-template-columns:1fr;padding:16px 12px 110px}
 }
 .ah{background:var(--paper);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100;padding:0 16px;display:block}
 .ahi{max-width:960px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:0}
@@ -349,8 +349,14 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       applyUserUI();
     } else {
       window._fbUser = null;
-      document.getElementById('authBtn').style.display = 'flex';
-      document.getElementById('authUserInfo').style.display = 'none';
+      var btnEl2 = document.getElementById('authBtn');
+      var infoEl2 = document.getElementById('authUserInfo');
+      var av2 = document.getElementById('authAvatar');
+      var dd2 = document.getElementById('authDropdown');
+      if(btnEl2) btnEl2.style.display = 'flex';
+      if(infoEl2) infoEl2.style.display = 'none';
+      if(av2){ av2.innerHTML = ''; av2.textContent = '?'; }
+      if(dd2) dd2.classList.remove('on');
     }
   });
 </script>
@@ -410,7 +416,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
     <div class="ahi-row2">
       <div class="wb" id="wkb">— 주차</div>
       <button class="hist-btn" onclick="showHelp()">? 사용법</button>
-      <a href="board.html" class="hist-btn" style="text-decoration:none">💬 커뮤니티</a>
+      <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
       <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
       <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
@@ -436,6 +442,8 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       <div class="bs"><div class="bn" id="btl">0</div><div class="bl">전체</div></div>
       <div class="bs"><div class="bn" id="blft">—</div><div class="bl">출산까지</div></div>
       <div class="bs"><div class="bn" id="pct" style="font-size:17px">0%</div><div class="bl">진행률</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border-top:1px solid var(--bd);padding-top:5px;margin-top:2px">
       <button class="rb" onclick="showHist()">🗑 삭제기록</button>
       <button class="rb" onclick="confirmReset()">초기화</button>
     </div>
@@ -1144,15 +1152,13 @@ function doGoogleLogin(){
 }
 function doLogout(){
   if(!confirm('로그아웃 하시겠어요?'))return;
+  var dd=document.getElementById('authDropdown');
+  if(dd) dd.classList.remove('on');
   window._fbFns.signOut(window._fbAuth).then(function(){
-    window._fbUser=null;
-    document.getElementById('authBtn').style.display='flex';
-    document.getElementById('authUserInfo').style.display='none';
-    // 커버로 이동
+    // onAuthStateChanged가 UI 처리하므로 여기선 앱 상태만 초기화
     document.getElementById('app').style.display='none';
     document.getElementById('cover').style.display='flex';
     document.getElementById('setup').style.display='none';
-    // S 초기화
     S={edd:null,nm:'',chk:{},custom:{},deleted:{}};
   });
 }

@@ -410,7 +410,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
     <div class="ahi-row2">
       <div class="wb" id="wkb">— 주차</div>
       <button class="hist-btn" onclick="showHelp()">? 사용법</button>
-      <button class="hist-btn" onclick="showHist()">🗑 삭제기록</button>
+      <a href="board.html" class="hist-btn" style="text-decoration:none">💬 커뮤니티</a>
       <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
       <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
@@ -436,6 +436,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       <div class="bs"><div class="bn" id="btl">0</div><div class="bl">전체</div></div>
       <div class="bs"><div class="bn" id="blft">—</div><div class="bl">출산까지</div></div>
       <div class="bs"><div class="bn" id="pct" style="font-size:17px">0%</div><div class="bl">진행률</div></div>
+      <button class="rb" onclick="showHist()">🗑 삭제기록</button>
       <button class="rb" onclick="confirmReset()">초기화</button>
     </div>
   </div>

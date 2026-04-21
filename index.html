@@ -1297,7 +1297,9 @@ function showDailyMsg(){
   .survey-close-btn {
     position:absolute; top:14px; right:16px;
     background:none; border:none; color:var(--lt);
-    font-size:18px; cursor:pointer; padding:4px; z-index:10;
+    font-size:11px; cursor:pointer; padding:4px;
+    z-index:10; text-decoration:underline;
+    font-family:'Noto Sans KR',sans-serif;
   }
   .survey-close-btn:hover { color:var(--mid); }
 
@@ -1447,7 +1449,7 @@ function showDailyMsg(){
 
 <div class="survey-overlay" id="survey-overlay">
   <div class="survey-popup">
-    <button class="survey-close-btn" onclick="closePopup()">✕</button>
+    <button class="survey-close-btn" onclick="closeSurveyToday()">오늘은 그만보기</button>
 
     <div class="survey-progress-dots">
       <div class="survey-dot active" id="survey-dot0"></div>
@@ -1812,6 +1814,13 @@ function showDailyMsg(){
     },0);
   }
 
+  function closeSurveyToday() {
+    // 오늘 날짜를 저장 → 당일은 다시 안 뜸
+    const today = new Date().toISOString().slice(0, 10); // "2026-04-21"
+    localStorage.setItem('babynote_survey_hide_' + SURVEY_ID, today);
+    closePopup();
+  }
+
   function closePopup() {
     document.getElementById('survey-overlay').style.animation='fadeOut .2s ease forwards';
     setTimeout(()=>{ document.getElementById('survey-overlay').style.display='none'; },200);
@@ -1823,7 +1832,14 @@ function showDailyMsg(){
       document.getElementById('survey-overlay').style.display = 'none';
       return;
     }
+    // 설문 완료한 경우
     if (localStorage.getItem('babynote_survey_' + SURVEY_ID) === 'true') {
+      document.getElementById('survey-overlay').style.display = 'none';
+      return;
+    }
+    // 오늘 이미 닫은 경우
+    const today = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem('babynote_survey_hide_' + SURVEY_ID) === today) {
       document.getElementById('survey-overlay').style.display = 'none';
       return;
     }

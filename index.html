@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BABYNOTE</title>
+<title>우리 아기 준비 노트</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -263,47 +263,11 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   gtag('js', new Date());
   gtag('config', 'G-1PF2E01VPH');
 </script>
-<!-- 로그인 상태 즉시 복원 (Firebase 로드 전 깜빡임 방지) -->
-<script>
-(function(){
-  try {
-    // Firebase Auth가 localStorage에 캐싱하는 키 찾기
-    var fbKey = Object.keys(localStorage).find(function(k){
-      return k.startsWith('firebase:authUser:');
-    });
-    if (fbKey) {
-      var u = JSON.parse(localStorage.getItem(fbKey));
-      if (u && u.uid) {
-        // 로그인 상태 — 아바타 즉시 표시
-        var initial = u.displayName ? u.displayName[0].toUpperCase()
-                    : u.email ? u.email[0].toUpperCase() : 'U';
-        // body 로드 전이므로 DOMContentLoaded 후 적용
-        document.addEventListener('DOMContentLoaded', function(){
-          var authBtn = document.getElementById('authBtn');
-          var authUserInfo = document.getElementById('authUserInfo');
-          var authAvatar = document.getElementById('authAvatar');
-          var authUserName = document.getElementById('authUserName');
-          if (authBtn) authBtn.style.display = 'none';
-          if (authUserInfo) authUserInfo.style.display = 'flex';
-          if (authUserName) authUserName.textContent = u.displayName || u.email || '사용자';
-          if (authAvatar) {
-            if (u.photoURL) {
-              authAvatar.innerHTML = '<img src="' + u.photoURL + '">';
-            } else {
-              authAvatar.textContent = initial;
-            }
-          }
-        });
-      }
-    }
-  } catch(e) {}
-})();
-</script>
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAo-zCvajJN85fBB96GbGOmLx64dradSPs",
@@ -331,7 +295,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 
   // ── 로그인 상태 감지 ──
   onAuthStateChanged(auth, async (user) => {
-    if (user && !user.isAnonymous) {
+    if (user) {
       window._fbUser = user;
       // Firestore에서 데이터 로드
       try {
@@ -351,7 +315,6 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           }
           if (!window.S.custom) window.S.custom = {};
           if (!window.S.deleted) window.S.deleted = {};
-          if (!window.S.chk) window.S.chk = {};
         }
       } catch(e) { console.error('Firestore load error:', e); }
 
@@ -374,6 +337,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           document.getElementById('setup').style.display = 'none';
           document.getElementById('app').style.display = 'block';
           if (window.init) window.init();
+          if (window.showSurveyPopup) window.showSurveyPopup();
         } else {
           document.getElementById('cover').style.display = 'none';
           document.getElementById('setup').style.display = 'flex';
@@ -385,7 +349,6 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       }
       applyUserUI();
     } else {
-      // 비로그인 또는 익명 — localStorage에서 불러오기
       window._fbUser = null;
       var btnEl2 = document.getElementById('authBtn');
       var infoEl2 = document.getElementById('authUserInfo');
@@ -393,7 +356,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       var dd2 = document.getElementById('authDropdown');
       if(btnEl2) btnEl2.style.display = 'flex';
       if(infoEl2) infoEl2.style.display = 'none';
-      if(av2){ av2.innerHTML = ''; av2.textContent = ''; }
+      if(av2){ av2.innerHTML = ''; av2.textContent = '?'; }
       if(dd2) dd2.classList.remove('on');
     }
   });
@@ -403,7 +366,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 <div id="cover" class="cover">
   <div class="cc">
     <div class="eye">출산 준비, 혼자 하라는 법 없잖아요<br>For Both Parents</div>
-    <h1><em>BABYNOTE</em></h1>
+    <h1>우리 아기<br><em>준비 노트</em></h1>
     <p class="csub">임신 주차별 출산 준비 체크리스트</p>
     <div class="cnote">
       <p>출산 준비를 하는 아내를 보니<br>
@@ -458,8 +421,8 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
       <a href="benefit.html" class="hist-btn gold-btn" style="text-decoration:none">💰 지원금</a>
       <button class="icon-btn" onclick="goHome()" title="홈">🏠</button>
       <button class="icon-btn" id="authBtn" onclick="showAuthModal()" style="display:flex" title="로그인">🔑</button>
-      <div class="auth-user-info" id="authUserInfo" style="display:none;position:relative">
-        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()"></button>
+      <div class="auth-user-info" id="authUserInfo" style="position:relative">
+        <button class="auth-avatar-btn" id="authAvatar" onclick="toggleUserMenu()">?</button>
         <div class="auth-dropdown" id="authDropdown">
           <div class="auth-dropdown-name" id="authUserName"></div>
           <button class="auth-dropdown-logout" onclick="doLogout()">🚪 로그아웃</button>
@@ -718,9 +681,9 @@ function ld(){try{var r=localStorage.getItem(K);return r?JSON.parse(r):null;}cat
 function sv(){
   try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}
   // Firestore 저장 (로그인 시)
-  if(window._fbUser && !window._fbUser.isAnonymous && window._fbDb && window._fbFns){
+  if(window._fbUser && window._fbDb && window._fbFns){
     var ref=window._fbFns.doc(window._fbDb,'users',window._fbUser.uid);
-    window._fbFns.setDoc(ref, JSON.parse(JSON.stringify(S)), {merge:true}).catch(function(e){console.error('Firestore save error:',e);});
+    window._fbFns.setDoc(ref, JSON.parse(JSON.stringify(S))).catch(function(e){console.error('Firestore save error:',e);});
   }
 }
 function showHelp(){
@@ -792,7 +755,7 @@ function goHome(){
   if(ah) ah.style.display='none';
 }
 function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
-function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';init();}
+function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';init();showSurveyPopup();}
 function cw(){if(!S.edd)return 20;var e=new Date(S.edd),l=new Date(e-280*864e5),d=Math.floor((new Date()-l)/864e5);return Math.max(1,Math.min(42,Math.floor(d/7)));}
 function wl(){if(!S.edd)return'—';var d=Math.floor((new Date(S.edd)-new Date())/864e5);if(d<0)return'🎉 출산 완료';return Math.floor(d/7)+'주 '+d%7+'일';}
 function allIds(wd){
@@ -1105,7 +1068,7 @@ window.onload=function(){
         document.getElementById('cover').style.display='none';
         document.getElementById('app').style.display='block';
         var ah=document.querySelector('.ah');if(ah)ah.style.display='';
-        init();
+        init();showSurveyPopup();
       }
       // 로그인 버튼 표시
       var ab=document.getElementById('authBtn');
@@ -1193,11 +1156,10 @@ function doLogout(){
   var dd=document.getElementById('authDropdown');
   if(dd) dd.classList.remove('on');
   window._fbFns.signOut(window._fbAuth).then(function(){
+    // onAuthStateChanged가 UI 처리하므로 여기선 앱 상태만 초기화
     document.getElementById('app').style.display='none';
     document.getElementById('cover').style.display='flex';
     document.getElementById('setup').style.display='none';
-    var ah=document.querySelector('.ah');
-    if(ah) ah.style.display='none';
     S={edd:null,nm:'',chk:{},custom:{},deleted:{}};
   });
 }
@@ -1309,6 +1271,608 @@ function showDailyMsg(){
     </button>
   </div>
 </div>
+
+<!-- ===== 공구 설문 팝업 ===== -->
+<style>
+  /* ── 설문 팝업 전용 CSS (기존 스타일에 영향 없음) ── */
+  :root {
+    --rose:#C4816A; --rp:rgba(196,129,106,.10);
+    --sage:#6B8F71; --ink:#1F2937; --mid:#6B7280;
+    --lt:#9CA3AF; --bg:#FDFAF6; --bd:#E5E7EB;
+  }
+  .survey-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:none; align-items:center; justify-content:center;
+    padding:20px; z-index:9999; animation:fadeIn .3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .survey-popup {
+    background:var(--bg); border-radius:20px;
+    width:100%; max-width:400px;
+    animation:slideUp .35s ease; position:relative;
+    max-height:90vh; overflow-y:auto;
+  }
+  .survey-close-btn {
+    position:absolute; top:14px; right:16px;
+    background:none; border:none; color:var(--lt);
+    font-size:18px; cursor:pointer; padding:4px; z-index:10;
+  }
+  .survey-close-btn:hover { color:var(--mid); }
+
+  .survey-step { display:none; }
+  .survey-step.active { display:block; }
+
+  /* 도트 */
+  .survey-progress-dots { display:flex; justify-content:center; gap:6px; padding:16px 0 0; }
+  .survey-dot { width:6px; height:6px; border-radius:50%; background:var(--bd); transition:all .2s; }
+  .survey-dot.active { background:var(--rose); width:18px; border-radius:3px; }
+  .survey-dot.done { background:var(--rose); opacity:.4; }
+
+  /* STEP 0 */
+  .survey-popup .intro-header {
+    background:linear-gradient(135deg,#C4816A 0%,#a86550 100%);
+    padding:32px 28px 24px; color:#fff;
+  }
+  .survey-popup .intro-header .emoji { font-size:28px; margin-bottom:10px; display:block; }
+  .survey-popup .intro-header h2 { font-size:17px; font-weight:700; line-height:1.4; margin-bottom:6px; }
+  .survey-popup .intro-header p { font-size:12px; opacity:.85; line-height:1.5; }
+  .survey-popup .intro-body { padding:22px 28px 26px; }
+  .survey-popup .intro-body .story { font-size:13px; color:var(--ink); line-height:1.8; margin-bottom:18px; }
+  .survey-popup .intro-body .story strong { color:var(--rose); }
+  .survey-popup .highlight-box {
+    background:var(--rp); border-left:3px solid var(--rose);
+    border-radius:0 10px 10px 0; padding:12px 14px;
+    font-size:13px; color:var(--ink); line-height:1.6; margin-bottom:18px;
+  }
+  .survey-popup .coffee-note {
+    display:flex; align-items:center; gap:8px;
+    background:#FFF8F0; border-radius:10px;
+    padding:10px 14px; margin-bottom:22px;
+    font-size:12px; color:var(--mid);
+  }
+
+  /* 공통 */
+  .survey-header { padding:24px 28px 0; }
+  .survey-popup .step-badge {
+    display:inline-block; background:var(--rp); color:var(--rose);
+    font-size:11px; font-weight:700; padding:3px 10px;
+    border-radius:100px; margin-bottom:10px; letter-spacing:.04em;
+  }
+  .survey-header h3 { font-size:16px; font-weight:700; color:var(--ink); line-height:1.4; margin-bottom:6px; }
+  .survey-header p { font-size:12px; color:var(--lt); line-height:1.5; }
+
+  /* 단일 선택 */
+  .survey-popup .options { padding:16px 28px 0; display:flex; flex-direction:column; gap:8px; }
+  .survey-popup .option-btn {
+    width:100%; background:#fff; border:1.5px solid var(--bd);
+    border-radius:12px; padding:13px 16px;
+    text-align:left; cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; color:var(--ink);
+    transition:all .18s; display:flex; align-items:center; gap:10px;
+  }
+  .survey-popup .option-btn:hover { border-color:var(--rose); background:var(--rp); }
+  .survey-popup .option-btn.selected { border-color:var(--rose); background:var(--rp); color:var(--rose); font-weight:700; }
+  .survey-popup .option-btn .opt-icon { font-size:17px; flex-shrink:0; }
+
+  /* 복수 선택 */
+  .survey-popup .multi-options { padding:16px 28px 0; display:flex; flex-wrap:wrap; gap:8px; }
+  .survey-popup .multi-btn {
+    background:#fff; border:1.5px solid var(--bd);
+    border-radius:100px; padding:9px 16px;
+    cursor:pointer; font-family:'Noto Sans KR',sans-serif;
+    font-size:13px; color:var(--ink);
+    transition:all .18s; white-space:nowrap;
+  }
+  .survey-popup .multi-btn:hover { border-color:var(--rose); background:var(--rp); }
+  .survey-popup .multi-btn.selected { border-color:var(--rose); background:var(--rp); color:var(--rose); font-weight:700; }
+
+  /* 자유 입력 */
+  .survey-popup .text-input-wrap { padding:16px 28px 0; }
+  .survey-popup .text-input-wrap input {
+    width:100%; border:1.5px solid var(--bd);
+    border-radius:12px; padding:14px 16px;
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; color:var(--ink);
+    background:#fff; outline:none; transition:border .18s;
+  }
+  .survey-popup .text-input-wrap input:focus { border-color:var(--rose); }
+  .survey-popup .text-input-wrap .input-hint { font-size:11px; color:var(--lt); margin-top:6px; padding-left:4px; }
+
+  /* 구매의향 */
+  .survey-popup .intent-options { padding:16px 28px 0; display:flex; gap:10px; }
+  .survey-popup .intent-btn {
+    flex:1; background:#fff; border:1.5px solid var(--bd);
+    border-radius:14px; padding:20px 12px;
+    text-align:center; cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; transition:all .18s;
+  }
+  .survey-popup .intent-btn .i-emoji { font-size:26px; display:block; margin-bottom:8px; }
+  .survey-popup .intent-btn .i-label { font-size:14px; font-weight:700; color:var(--ink); display:block; }
+  .survey-popup .intent-btn .i-sub { font-size:11px; color:var(--lt); margin-top:3px; display:block; }
+  .survey-popup .intent-btn.yes:hover, .survey-popup .intent-btn.yes.selected { border-color:var(--sage); background:rgba(107,143,113,.08); }
+  .survey-popup .intent-btn.yes.selected .i-label { color:var(--sage); }
+  .survey-popup .intent-btn.no:hover, .survey-popup .intent-btn.no.selected { border-color:var(--bd); background:#f9fafb; }
+
+  /* 푸터 */
+  .survey-footer { padding:18px 28px 26px; }
+  .survey-popup .footer-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .survey-popup .footer-row .btn-next { flex:1; }
+
+  .survey-popup .btn-primary {
+    width:100%; background:var(--rose); color:#fff;
+    border:none; border-radius:12px; padding:15px;
+    font-size:15px; font-weight:700; cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; transition:background .2s;
+  }
+  .survey-popup .btn-primary:hover { background:#b5705a; }
+
+  .survey-popup .btn-next {
+    background:var(--rose); color:#fff; border:none;
+    border-radius:12px; padding:14px;
+    font-size:14px; font-weight:700; cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; transition:background .2s;
+    opacity:.4; pointer-events:none;
+  }
+  .survey-popup .btn-next.enabled, .survey-popup .btn-next.always { opacity:1; pointer-events:auto; }
+  .survey-popup .btn-next.enabled:hover, .survey-popup .btn-next.always:hover { background:#b5705a; }
+
+  .survey-popup .btn-back {
+    background:none; border:none; color:var(--lt);
+    font-size:13px; font-family:'Noto Sans KR',sans-serif;
+    cursor:pointer; padding:0; white-space:nowrap;
+    display:flex; align-items:center; gap:4px; transition:color .15s;
+  }
+  .survey-popup .btn-back:hover { color:var(--mid); }
+
+  /* 완료 */
+  .survey-popup .done-body { padding:40px 28px 36px; text-align:center; }
+  .survey-popup .done-emoji { font-size:48px; display:block; margin-bottom:16px; }
+  .survey-popup .done-body h3 { font-size:18px; font-weight:700; color:var(--ink); margin-bottom:10px; }
+  .survey-popup .done-body p { font-size:13px; color:var(--mid); line-height:1.7; margin-bottom:20px; }
+  .survey-popup .done-body .coffee-draw {
+    background:#FFF8F0; border-radius:12px;
+    padding:14px 18px; font-size:13px; color:var(--ink);
+    margin-bottom:24px; line-height:1.6;
+  }
+  .survey-popup .done-body .coffee-draw strong { color:var(--rose); }
+
+  .demo-label { text-align:center; font-size:12px; color:#9CA3AF; margin-bottom:12px; }
+
+/* 설문 팝업은 기존 팝업과 독립적으로 z-index 관리 */
+.survey-overlay { z-index: 9999; }
+</style>
+
+
+
+<div class="survey-overlay" id="survey-overlay">
+  <div class="survey-popup">
+    <button class="survey-close-btn" onclick="closePopup()">✕</button>
+
+    <div class="survey-progress-dots">
+      <div class="survey-dot active" id="survey-dot0"></div>
+      <div class="survey-dot" id="survey-dot1"></div>
+      <div class="survey-dot" id="survey-dot2"></div>
+      <div class="survey-dot" id="survey-dot3"></div>
+      <div class="survey-dot" id="survey-dot4"></div>
+      <div class="survey-dot" id="survey-dot5"></div>
+      <div class="survey-dot" id="survey-dot6"></div>
+    </div>
+
+    <!-- STEP 0: 소개 -->
+    <div class="survey-step active" id="survey-step0">
+      <div class="intro-header">
+        <span class="emoji">👶</span>
+        <h2>베이비노트 사용자 여러분과<br>진짜 공동구매를 해보고 싶어요</h2>
+        <p>예비 아빠가 만든 출산 준비 앱</p>
+      </div>
+      <div class="intro-body">
+        <p class="story">
+          안녕하세요, 10년 차 패션 커머스업 종사자이자 곧 아이를 만날 예비 아빠입니다.<br><br>
+          출산 준비를 시작하며 육아용품의 높은 가격대를 체감했습니다. 커머스 업계에 몸담아온 입장에서 보니, 현재 시중의 많은 공동구매가 미리 정해진 가격대로 흘러가는 <strong>'기획된 공구'</strong>라는 점도 아쉬웠습니다.<br><br>
+          현재 베이비노트에는 벌써 <strong>1,000명 이상의 예비 부모님들</strong>이 모여 계십니다. 이 숫자는 커머스 시장에서 충분히 가격 협상력을 가질 수 있는 규모입니다.<br><br>
+          제가 가진 유통·마케팅 경험을 살려 업체와 직접 협상해 <strong>'진짜 공구'</strong>를 만들어보려 합니다. 이번 설문으로 모인 여러분의 구체적인 니즈는 제조사를 설득할 가장 강력한 근거가 됩니다.
+        </p>
+        <div class="highlight-box">
+          💡 거품 없는 합리적인 출산 준비를 위해 소중한 의견을 보태주세요. 발로 뛰어 좋은 결과로 보답하겠습니다.
+        </div>
+        <div class="coffee-note">
+          <span style="font-size:16px">☕</span>
+          <span>설문 완료 후 추첨으로 <strong>5분께 커피 쿠폰</strong>을 드려요!</span>
+        </div>
+        <button class="btn-primary" onclick="goStep(1)">설문 시작하기 →</button>
+      </div>
+    </div>
+
+    <!-- STEP 1: 카테고리 -->
+    <div class="survey-step" id="survey-step1">
+      <div class="survey-header">
+        <span class="step-badge">1 / 5</span>
+        <h3>가장 공구가 필요한<br>제품 카테고리는 무엇인가요?</h3>
+        <p>한 가지를 골라주세요</p>
+      </div>
+      <div class="options" id="cat-options">
+        <button class="option-btn" onclick="selectSingle(this,'cat','next1')" data-val="유모차"><span class="opt-icon">🛒</span>유모차</button>
+        <button class="option-btn" onclick="selectSingle(this,'cat','next1')" data-val="카시트"><span class="opt-icon">🚗</span>카시트</button>
+        <button class="option-btn" onclick="selectSingle(this,'cat','next1')" data-val="기저귀 갈이대"><span class="opt-icon">🛁</span>기저귀 갈이대</button>
+        <button class="option-btn" onclick="selectSingle(this,'cat','next1')" data-val="아기 침대"><span class="opt-icon">🛏️</span>아기 침대</button>
+        <button class="option-btn" onclick="selectSingle(this,'cat','next1')" data-val="아기 매트"><span class="opt-icon">🧸</span>아기 매트</button>
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(0)">← 뒤로</button>
+          <button class="btn-next" id="next1" onclick="goStep(2)">다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: 선택 기준 (카테고리별 동적 렌더링) -->
+    <div class="survey-step" id="survey-step2">
+      <div class="survey-header">
+        <span class="step-badge">2 / 6</span>
+        <h3>제품 선택 시 중요하게 보시는<br>기준을 모두 골라주세요</h3>
+        <p>복수 선택 가능해요</p>
+      </div>
+      <div class="multi-options" id="criteria-options">
+        <!-- JS로 카테고리에 따라 동적 생성 -->
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(1)">← 뒤로</button>
+          <button class="btn-next" id="next2" onclick="goStep(3)">다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: 가격대 (카테고리별 동적 렌더링) -->
+    <div class="survey-step" id="survey-step3">
+      <div class="survey-header">
+        <span class="step-badge">3 / 5</span>
+        <h3>공구 시 희망하는<br>가격대는 어느 정도인가요?</h3>
+        <p>한 가지를 골라주세요</p>
+      </div>
+      <div class="options" id="price-options">
+        <!-- JS로 카테고리에 따라 동적 생성 -->
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(2)">← 뒤로</button>
+          <button class="btn-next" id="next3" onclick="goStep(4)">다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: 브랜드 자유 입력 -->
+    <div class="survey-step" id="survey-step4">
+      <div class="survey-header">
+        <span class="step-badge">4 / 5</span>
+        <h3>마음에 두고 있는 브랜드가<br>있다면 적어주세요</h3>
+        <p>없거나 모르셔도 괜찮아요 — 건너뛰기 가능해요</p>
+      </div>
+      <div class="text-input-wrap">
+        <input type="text" id="brand-input" placeholder="브랜드명을 입력해 주세요" oninput="answers.brand=this.value" />
+        <p class="input-hint">잘 모르는 경우 그냥 두시면 제가 직접 찾아드릴게요 😊</p>
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(3)">← 뒤로</button>
+          <button class="btn-next always" onclick="goStep(5)">다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: 구매 의향 -->
+    <div class="survey-step" id="survey-step5">
+      <div class="survey-header">
+        <span class="step-badge">5 / 6</span>
+        <h3>최저가로 공구가 성사되면<br>구매 의향이 있으신가요?</h3>
+        <p>솔직하게 선택해 주세요 — 어떤 답이든 소중한 데이터예요</p>
+      </div>
+      <div class="intent-options">
+        <button class="intent-btn yes" onclick="selectIntent(this,'yes')">
+          <span class="i-emoji">✋</span>
+          <span class="i-label">네, 있어요</span>
+        </button>
+        <button class="intent-btn no" onclick="selectIntent(this,'no')">
+          <span class="i-emoji">🙅</span>
+          <span class="i-label">아직 모르겠어요</span>
+        </button>
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(4)">← 뒤로</button>
+          <button class="btn-next" id="next5" onclick="goStep(6)">다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: 전화번호 -->
+    <div class="survey-step" id="survey-step6">
+      <div class="survey-header">
+        <span class="step-badge">6 / 6</span>
+        <h3>연락받으실 전화번호를<br>남겨주세요</h3>
+        <p>커피쿠폰 추첨 안내 및 공구 진행 시 문자로 알려드려요</p>
+      </div>
+      <div class="text-input-wrap">
+        <input type="tel" id="phone-input" placeholder="010-0000-0000" oninput="handlePhone(this)" />
+        <p class="input-hint">수집된 연락처는 공구 안내 목적으로만 사용돼요</p>
+      </div>
+      <div style="padding:12px 28px 0;">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="agree-check" onchange="handleAgree()"
+            style="margin-top:3px;accent-color:var(--rose);width:16px;height:16px;flex-shrink:0;" />
+          <span style="font-size:12px;color:var(--mid);line-height:1.6;">
+            수집된 전화번호는 <strong style="color:var(--ink)">공구 안내 및 커피쿠폰 추첨</strong> 목적으로만 사용되며, 목적 달성 후 즉시 파기됩니다. 개인정보 수집·이용에 동의합니다.
+          </span>
+        </label>
+      </div>
+      <div class="survey-footer">
+        <div class="footer-row">
+          <button class="btn-back" onclick="goStep(5)">← 뒤로</button>
+          <button class="btn-next" id="next6" onclick="goStep(7)">완료하기 🎉</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7: 완료 -->
+    <div class="survey-step" id="survey-step7">
+      <div class="done-body">
+        <span class="done-emoji">🎉</span>
+        <h3>응답해 주셔서 감사해요!</h3>
+        <p>여러분의 조건을 바탕으로<br>제가 직접 브랜드를 찾아<br>업체에 공구를 제안해 볼게요.<br>결과는 베이비노트에서 가장 먼저 알려드릴게요.</p>
+        <div class="coffee-draw">
+          ☕ <strong>커피쿠폰 추첨</strong>은 설문 종료 후<br>5분을 선정해 문자로 알려드릴게요!
+        </div>
+        <button class="btn-primary" onclick="closePopup()">닫기</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+
+  // ── 공구 설문 제어 ──
+  const SURVEY_ACTIVE = true;   // false로 바꾸면 팝업 안 뜸
+  const SURVEY_ID = 'survey_001'; // 조사마다 ID 바꾸기 → 이전 참여자도 새 조사 참여 가능
+
+  let answers = { cat:null, criteria:[], price:null, brand:'', intent:null, phone:'', agree:false };
+  let cur = 0;
+
+  // 카테고리별 현실적인 가격대
+  const priceData = {
+    '유모차': [
+      { icon:'💚', label:'70만원 미만' },
+      { icon:'💛', label:'70 ~ 120만원' },
+      { icon:'🧡', label:'120 ~ 170만원' },
+      { icon:'❤️', label:'170만원 이상' },
+      { icon:'🤔', label:'모르겠다' },
+    ],
+    '카시트': [
+      { icon:'💚', label:'30만원 미만' },
+      { icon:'💛', label:'30 ~ 60만원' },
+      { icon:'🧡', label:'60 ~ 100만원' },
+      { icon:'❤️', label:'100만원 이상' },
+      { icon:'🤔', label:'모르겠다' },
+    ],
+    '기저귀 갈이대': [
+      { icon:'💚', label:'10만원 미만' },
+      { icon:'💛', label:'10 ~ 20만원' },
+      { icon:'🧡', label:'20 ~ 40만원' },
+      { icon:'❤️', label:'40만원 이상' },
+      { icon:'🤔', label:'모르겠다' },
+    ],
+    '아기 침대': [
+      { icon:'💚', label:'20만원 미만' },
+      { icon:'💛', label:'20 ~ 50만원' },
+      { icon:'🧡', label:'50 ~ 100만원' },
+      { icon:'❤️', label:'100만원 이상' },
+      { icon:'🤔', label:'모르겠다' },
+    ],
+    '아기 매트': [
+      { icon:'💚', label:'10만원 미만' },
+      { icon:'💛', label:'10 ~ 30만원' },
+      { icon:'🧡', label:'30 ~ 60만원' },
+      { icon:'❤️', label:'60만원 이상' },
+      { icon:'🤔', label:'모르겠다' },
+    ],
+  };
+
+  // 카테고리별 선택 기준
+  const criteriaData = {
+    '유모차': ['🛡️ 안전성·인증','💰 가격','✨ 디자인','🪶 무게·휴대성','🚀 주행감·안정성','🇰🇷 국내 브랜드','🌍 수입 브랜드','🔧 AS·사후관리','📈 중고 가격유지율'],
+    '카시트': ['🛡️ 안전성·인증','💰 가격','✨ 디자인','🪶 무게·설치편의','🔄 회전기능','🇰🇷 국내 브랜드','🌍 수입 브랜드','🔧 AS·사후관리','📈 중고 가격유지율'],
+    '기저귀 갈이대': ['🛡️ 안전성·소재','💰 가격','✨ 디자인','📦 수납공간','🧹 청소 편의성','🇰🇷 국내 브랜드','🌍 수입 브랜드','🔧 AS·사후관리'],
+    '아기 침대': ['🛡️ 안전성·소재','💰 가격','✨ 디자인','📐 사이즈·공간효율','🌿 친환경 소재','🇰🇷 국내 브랜드','🌍 수입 브랜드','🔧 AS·사후관리'],
+    '아기 매트': ['🛡️ 안전성·인증','💰 가격','✨ 디자인','📐 사이즈·두께','🌿 친환경 소재','🧹 청소 편의성','🇰🇷 국내 브랜드','🌍 수입 브랜드'],
+  };
+
+  function renderCriteria(cat) {
+    const container = document.getElementById('criteria-options');
+    const items = criteriaData[cat] || criteriaData['유모차'];
+    answers.criteria = [];
+    document.getElementById('next2').classList.remove('enabled');
+    container.innerHTML = items.map(item => {
+      const val = item.replace(/^[\S]+\s/, ''); // 이모지 제거해서 val로
+      return `<button class="multi-btn" onclick="selectMulti(this)" data-val="${item}">${item}</button>`;
+    }).join('');
+  }
+
+  function renderPrice(cat) {
+    const container = document.getElementById('price-options');
+    const prices = priceData[cat] || [];
+    answers.price = null;
+    document.getElementById('next3').classList.remove('enabled');
+    container.innerHTML = prices.map(p => `
+      <button class="option-btn" onclick="selectSingle(this,'price','next3')" data-val="${p.label}">
+        <span class="opt-icon">${p.icon}</span>${p.label}
+      </button>
+    `).join('');
+  }
+
+  function goStep(n) {
+    document.getElementById('survey-step'+cur).classList.remove('active');
+    document.getElementById('survey-step'+n).classList.add('active');
+    for (let i=0; i<=6; i++) {
+      const d = document.getElementById('survey-dot'+i);
+      if (!d) continue;
+      d.classList.remove('active','done');
+      if (i===n) d.classList.add('active');
+      else if (i<n) d.classList.add('done');
+    }
+    if (n===1 && answers.cat) restore('#cat-options .option-btn', answers.cat, 'next1');
+    if (n===2) {
+      renderCriteria(answers.cat);
+      restoreMulti();
+    }
+    if (n===3) {
+      renderPrice(answers.cat);
+      if (answers.price) restore('#price-options .option-btn', answers.price, 'next3');
+    }
+    if (n===4) { const inp=document.getElementById('brand-input'); if(inp) inp.value=answers.brand||''; }
+    if (n===5 && answers.intent) restoreIntent();
+    if (n===6) {
+      const inp=document.getElementById('phone-input');
+      if(inp && answers.phone) inp.value=answers.phone;
+      const chk=document.getElementById('agree-check');
+      if(chk) chk.checked=answers.agree;
+      checkPhone();
+    }
+    cur = n;
+  }
+
+  function selectSingle(btn, key, nextId) {
+    btn.closest('.options').querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[key] = btn.dataset.val;
+    document.getElementById(nextId).classList.add('enabled');
+  }
+
+  function selectMulti(btn) {
+    btn.classList.toggle('selected');
+    answers.criteria = Array.from(document.querySelectorAll('#criteria-options .multi-btn.selected')).map(b=>b.dataset.val);
+    const nb = document.getElementById('next2');
+    answers.criteria.length>0 ? nb.classList.add('enabled') : nb.classList.remove('enabled');
+  }
+
+  function selectIntent(btn, val) {
+    document.querySelectorAll('.intent-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers.intent = val;
+    document.getElementById('next5').classList.add('enabled');
+  }
+
+  function handlePhone(inp) {
+    // 숫자만 추출 후 자동 하이픈
+    let v = inp.value.replace(/\D/g,'');
+    if (v.length > 11) v = v.slice(0,11);
+    if (v.length >= 8) v = v.replace(/(\d{3})(\d{4})(\d{0,4})/,'$1-$2-$3');
+    else if (v.length >= 4) v = v.replace(/(\d{3})(\d{0,4})/,'$1-$2');
+    inp.value = v;
+    answers.phone = v;
+    checkPhone();
+  }
+
+  function handleAgree() {
+    answers.agree = document.getElementById('agree-check').checked;
+    checkPhone();
+  }
+
+  function checkPhone() {
+    const phoneOk = answers.phone.replace(/\D/g,'').length >= 10;
+    const nb = document.getElementById('next6');
+    if (nb) (phoneOk && answers.agree) ? nb.classList.add('enabled') : nb.classList.remove('enabled');
+  }
+  function restore(sel, val, nextId) {
+    setTimeout(()=>{
+      document.querySelectorAll(sel).forEach(b=>{
+        b.classList.remove('selected');
+        if (b.dataset.val===val) { b.classList.add('selected'); document.getElementById(nextId).classList.add('enabled'); }
+      });
+    },0);
+  }
+
+  function restoreMulti() {
+    setTimeout(()=>{
+      document.querySelectorAll('#criteria-options .multi-btn').forEach(b=>{
+        b.classList.remove('selected');
+        if (answers.criteria.includes(b.dataset.val)) b.classList.add('selected');
+      });
+      const nb=document.getElementById('next2');
+      answers.criteria.length>0 ? nb.classList.add('enabled') : nb.classList.remove('enabled');
+    },0);
+  }
+
+  function restoreIntent() {
+    setTimeout(()=>{
+      document.querySelectorAll('.intent-btn').forEach(b=>{
+        b.classList.remove('selected');
+        const v = b.classList.contains('yes')?'yes':'no';
+        if (v===answers.intent) { b.classList.add('selected'); document.getElementById('next5').classList.add('enabled'); }
+      });
+    },0);
+  }
+
+  function closePopup() {
+    document.getElementById('survey-overlay').style.animation='fadeOut .2s ease forwards';
+    setTimeout(()=>{ document.getElementById('survey-overlay').style.display='none'; },200);
+  }
+
+  // ── 팝업 표시 함수 (노트 화면 진입 시 호출) ──
+  window.showSurveyPopup = function() {
+    if (!SURVEY_ACTIVE) {
+      document.getElementById('survey-overlay').style.display = 'none';
+      return;
+    }
+    if (localStorage.getItem('babynote_survey_' + SURVEY_ID) === 'true') {
+      document.getElementById('survey-overlay').style.display = 'none';
+      return;
+    }
+    // 노트 화면 진입 후 1초 뒤 자연스럽게 등장
+    setTimeout(() => {
+      document.getElementById('survey-overlay').style.display = 'flex';
+    }, 1000);
+  };
+
+  // ── Firestore 저장 ──
+  async function saveSurvey() {
+    try {
+      const uid = auth.currentUser ? auth.currentUser.uid : 'anonymous';
+      await addDoc(collection(db, 'surveys'), {
+        surveyId: SURVEY_ID,
+        cat: answers.cat,
+        criteria: answers.criteria,
+        price: answers.price,
+        brand: answers.brand || null,
+        intent: answers.intent,
+        phone: answers.phone || null,
+        uid: uid,
+        createdAt: serverTimestamp()
+      });
+      console.log('설문 저장 완료');
+    } catch (e) {
+      console.error('설문 저장 실패:', e);
+    }
+  }
+
+  // goStep에서 Step6 진입 시 저장 + localStorage 완료 처리
+  const _origGoStep = goStep;
+  goStep = function(n) {
+    if (n === 7) {
+      // localStorage 완료 표시
+      localStorage.setItem('babynote_survey_' + SURVEY_ID, 'true');
+      // Firestore 저장
+      saveSurvey();
+    }
+    _origGoStep(n);
+  };
+
+  const s=document.createElement('style');
+  s.textContent='@keyframes fadeOut{to{opacity:0}}';
+  document.head.appendChild(s);
+
+</script>
+<!-- ===== /공구 설문 팝업 ===== -->
+
 </body>
 </htmlvar RECS={
   "엽산제":{ sub:"임신 초기 필수 영양제", items:[

@@ -283,6 +283,13 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
+  // 설문 팝업에서 사용할 수 있도록 window에 노출
+  window._fbAuth = auth;
+  window._fbDb = db;
+  window._fbAddDoc = addDoc;
+  window._fbCollection = collection;
+  window._fbServerTimestamp = serverTimestamp;
+
   // ── 전역 노출 ──
   window._fbAuth = auth;
   window._fbDb = db;
@@ -1852,8 +1859,13 @@ function showDailyMsg(){
   // ── Firestore 저장 ──
   async function saveSurvey() {
     try {
-      const uid = auth.currentUser ? auth.currentUser.uid : 'anonymous';
-      await addDoc(collection(db, 'surveys'), {
+      // window에 노출된 Firebase 인스턴스 사용
+      if (!window._fbDb || !window._fbAddDoc || !window._fbCollection || !window._fbServerTimestamp) {
+        console.error('설문 저장 실패: Firebase 미초기화');
+        return;
+      }
+      const uid = window._fbAuth && window._fbAuth.currentUser ? window._fbAuth.currentUser.uid : 'anonymous';
+      await window._fbAddDoc(window._fbCollection(window._fbDb, 'surveys'), {
         surveyId: SURVEY_ID,
         cat: answers.cat,
         criteria: answers.criteria,
@@ -1862,7 +1874,7 @@ function showDailyMsg(){
         intent: answers.intent,
         phone: answers.phone || null,
         uid: uid,
-        createdAt: serverTimestamp()
+        createdAt: window._fbServerTimestamp()
       });
       console.log('설문 저장 완료');
     } catch (e) {

@@ -1069,6 +1069,9 @@ window.onload=function(){
   // 헤더 항상 표시 (커버/셋업/앱 모두)
   var ah=document.querySelector('.ah');
   if(ah) ah.style.display='';
+  // 하단 메뉴는 앱 진입 전까지 숨김
+  var bb=document.getElementById('mainBb');
+  if(bb) bb.style.display='none';
   // Firebase onAuthStateChanged가 처리하므로 비로그인 시만 localStorage 사용
   setTimeout(function(){
     if(!window._fbUser){

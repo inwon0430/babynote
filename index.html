@@ -343,7 +343,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           document.getElementById('cover').style.display = 'none';
           document.getElementById('setup').style.display = 'none';
           document.getElementById('app').style.display = 'block';
-          setTimeout(function(){ var bb=document.querySelector('.bb');if(bb)bb.style.display='flex'; }, 300);
+          setTimeout(function(){ var bb=document.getElementById('mainBb');if(bb)bb.style.display='flex'; }, 300);
           if (window.init) window.init();
           if (window.showSurveyPopup) window.showSurveyPopup();
         } else {
@@ -372,7 +372,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 </head>
 <body>
 <div id="cover" class="cover">
-<script>document.addEventListener('DOMContentLoaded',function(){var bb=document.querySelector('.bb');if(bb)bb.style.display='none';});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var bb=document.getElementById('mainBb');if(bb)bb.style.display='none';});</script>
   <div class="cc">
     <div class="eye">출산 준비, 혼자 하라는 법 없잖아요<br>For Both Parents</div>
     <h1>우리 아기<br><em>준비 노트</em></h1>
@@ -445,7 +445,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
     <aside class="sb" id="sb"></aside>
     <div class="pls" id="pls"></div>
   </div>
-  <div class="bb">
+  <div class="bb" id="mainBb" style="display:none">
     <div class="daily-msg" id="dailyMsg"></div>
     <div style="display:flex;align-items:center;justify-content:center;gap:20px;width:100%">
       <div class="bs"><div class="bn" id="bdn">0</div><div class="bl">완료</div></div>
@@ -764,7 +764,7 @@ function goHome(){
   if(ah) ah.style.display='none';
 }
 function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
-function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';init();showSurveyPopup();}
+function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';var bb=document.getElementById('mainBb');if(bb)bb.style.display='flex';init();showSurveyPopup();}
 function cw(){if(!S.edd)return 20;var e=new Date(S.edd),l=new Date(e-280*864e5),d=Math.floor((new Date()-l)/864e5);return Math.max(1,Math.min(42,Math.floor(d/7)));}
 function wl(){if(!S.edd)return'—';var d=Math.floor((new Date(S.edd)-new Date())/864e5);if(d<0)return'🎉 출산 완료';return Math.floor(d/7)+'주 '+d%7+'일';}
 function allIds(wd){
@@ -1078,7 +1078,7 @@ window.onload=function(){
         document.getElementById('app').style.display='block';
         var ah=document.querySelector('.ah');if(ah)ah.style.display='';
         init();showSurveyPopup();
-        setTimeout(function(){ var bb=document.querySelector('.bb');if(bb)bb.style.display='flex'; }, 300);
+        setTimeout(function(){ var bb=document.getElementById('mainBb');if(bb)bb.style.display='flex'; }, 300);
       }
       // 로그인 버튼 표시
       var ab=document.getElementById('authBtn');

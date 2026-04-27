@@ -343,7 +343,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           document.getElementById('cover').style.display = 'none';
           document.getElementById('setup').style.display = 'none';
           document.getElementById('app').style.display = 'block';
-          var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';
+          setTimeout(function(){ var bb=document.querySelector('.bb');if(bb)bb.style.display='flex'; }, 300);
           if (window.init) window.init();
           if (window.showSurveyPopup) window.showSurveyPopup();
         } else {
@@ -1076,8 +1076,8 @@ window.onload=function(){
         document.getElementById('cover').style.display='none';
         document.getElementById('app').style.display='block';
         var ah=document.querySelector('.ah');if(ah)ah.style.display='';
-        var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';
         init();showSurveyPopup();
+        setTimeout(function(){ var bb=document.querySelector('.bb');if(bb)bb.style.display='flex'; }, 300);
       }
       // 로그인 버튼 표시
       var ab=document.getElementById('authBtn');

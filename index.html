@@ -194,7 +194,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
 .tip{background:var(--rp);border-left:3px solid var(--rose);border-radius:0 9px 9px 0;padding:11px 15px;margin-top:12px;font-size:12px;color:var(--mid);line-height:1.8}
 .tl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:3px}
 /* BOTTOM */
-.bb{background:var(--paper);border-top:1px solid var(--bd);position:fixed;bottom:0;left:0;right:0;z-index:90;padding:4px 18px 7px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bb{background:var(--paper);border-top:1px solid var(--bd);position:fixed;bottom:0;left:0;right:0;z-index:90;padding:4px 18px 7px;display:none;flex-direction:column;align-items:center;gap:4px}
 .bs{text-align:center}
 .bn{font-family:'Playfair Display',serif;font-size:19px;color:var(--ink);line-height:1}
 .bl{font-size:10px;color:var(--lt)}
@@ -343,6 +343,7 @@ body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:var(--bg);col
           document.getElementById('cover').style.display = 'none';
           document.getElementById('setup').style.display = 'none';
           document.getElementById('app').style.display = 'block';
+          var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';
           if (window.init) window.init();
           if (window.showSurveyPopup) window.showSurveyPopup();
         } else {
@@ -762,7 +763,7 @@ function goHome(){
   if(ah) ah.style.display='none';
 }
 function showSetup(){document.getElementById('cover').style.display='none';document.getElementById('setup').style.display='flex';if(S.edd){document.getElementById('edd').value=S.edd;document.getElementById('nm').value=S.nm||'';}}
-function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';init();showSurveyPopup();}
+function startApp(){var e=document.getElementById('edd').value,n=document.getElementById('nm').value.trim();if(!e){alert('출산 예정일을 입력해주세요 🌸');return;}S.edd=e;S.nm=n;sv();document.getElementById('setup').style.display='none';document.getElementById('app').style.display='block';var ah=document.querySelector('.ah');if(ah)ah.style.display='';var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';init();showSurveyPopup();}
 function cw(){if(!S.edd)return 20;var e=new Date(S.edd),l=new Date(e-280*864e5),d=Math.floor((new Date()-l)/864e5);return Math.max(1,Math.min(42,Math.floor(d/7)));}
 function wl(){if(!S.edd)return'—';var d=Math.floor((new Date(S.edd)-new Date())/864e5);if(d<0)return'🎉 출산 완료';return Math.floor(d/7)+'주 '+d%7+'일';}
 function allIds(wd){
@@ -1075,6 +1076,7 @@ window.onload=function(){
         document.getElementById('cover').style.display='none';
         document.getElementById('app').style.display='block';
         var ah=document.querySelector('.ah');if(ah)ah.style.display='';
+        var bb=document.querySelector('.bb');if(bb)bb.style.display='flex';
         init();showSurveyPopup();
       }
       // 로그인 버튼 표시
@@ -1449,7 +1451,6 @@ function showDailyMsg(){
   .demo-label { text-align:center; font-size:12px; color:#9CA3AF; margin-bottom:12px; }
 
 /* 설문 팝업은 기존 팝업과 독립적으로 z-index 관리 */
-.survey-overlay { z-index: 9999; }
 </style>
 
 

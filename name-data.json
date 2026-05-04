@@ -1,0 +1,718 @@
+{
+  "meta": {
+    "source": "대한민국 법원 전자가족관계등록시스템",
+    "collected": "2026-05-04",
+    "errors": []
+  },
+  "data": {
+    "2023": {
+      "all": [
+        {
+          "rank": 1,
+          "name": "이준",
+          "count": 2078
+        },
+        {
+          "rank": 2,
+          "name": "서아",
+          "count": 2063
+        },
+        {
+          "rank": 3,
+          "name": "이서",
+          "count": 1929
+        },
+        {
+          "rank": 4,
+          "name": "도윤",
+          "count": 1921
+        },
+        {
+          "rank": 5,
+          "name": "하준",
+          "count": 1851
+        },
+        {
+          "rank": 6,
+          "name": "은우",
+          "count": 1836
+        },
+        {
+          "rank": 7,
+          "name": "지우",
+          "count": 1790
+        },
+        {
+          "rank": 8,
+          "name": "이현",
+          "count": 1772
+        },
+        {
+          "rank": 9,
+          "name": "연우",
+          "count": 1629
+        },
+        {
+          "rank": 10,
+          "name": "지안",
+          "count": 1627
+        },
+        {
+          "rank": 11,
+          "name": "시우",
+          "count": 1616
+        },
+        {
+          "rank": 12,
+          "name": "서준",
+          "count": 1583
+        },
+        {
+          "rank": 13,
+          "name": "이안",
+          "count": 1499
+        },
+        {
+          "rank": 14,
+          "name": "아윤",
+          "count": 1292
+        },
+        {
+          "rank": 15,
+          "name": "지아",
+          "count": 1279
+        },
+        {
+          "rank": 16,
+          "name": "지호",
+          "count": 1207
+        },
+        {
+          "rank": 17,
+          "name": "하윤",
+          "count": 1175
+        },
+        {
+          "rank": 18,
+          "name": "도현",
+          "count": 874
+        },
+        {
+          "rank": 19,
+          "name": "유준",
+          "count": 852
+        },
+        {
+          "rank": 20,
+          "name": "선우",
+          "count": 797
+        },
+        {
+          "rank": 21,
+          "name": "우주",
+          "count": 683
+        },
+        {
+          "rank": 22,
+          "name": "서윤",
+          "count": 398
+        },
+        {
+          "rank": 23,
+          "name": "예준",
+          "count": 376
+        },
+        {
+          "rank": 24,
+          "name": "지유",
+          "count": 367
+        },
+        {
+          "rank": 25,
+          "name": "아린",
+          "count": 358
+        },
+        {
+          "rank": 26,
+          "name": "하린",
+          "count": 352
+        },
+        {
+          "rank": 27,
+          "name": "서우",
+          "count": 242
+        },
+        {
+          "rank": 28,
+          "name": "도하",
+          "count": 208
+        },
+        {
+          "rank": 29,
+          "name": "로운",
+          "count": 124
+        },
+        {
+          "rank": 30,
+          "name": "시아",
+          "count": 120
+        },
+        {
+          "rank": 31,
+          "name": "수호",
+          "count": 117
+        },
+        {
+          "rank": 32,
+          "name": "서하",
+          "count": 110
+        }
+      ],
+      "male": [],
+      "female": []
+    },
+    "2024": {
+      "all": [
+        {
+          "rank": 1,
+          "name": "이서",
+          "count": 2013
+        },
+        {
+          "rank": 2,
+          "name": "이현",
+          "count": 2007
+        },
+        {
+          "rank": 3,
+          "name": "서아",
+          "count": 1929
+        },
+        {
+          "rank": 4,
+          "name": "지안",
+          "count": 1911
+        },
+        {
+          "rank": 5,
+          "name": "이준",
+          "count": 1872
+        },
+        {
+          "rank": 6,
+          "name": "하준",
+          "count": 1780
+        },
+        {
+          "rank": 7,
+          "name": "지우",
+          "count": 1762
+        },
+        {
+          "rank": 8,
+          "name": "도윤",
+          "count": 1680
+        },
+        {
+          "rank": 9,
+          "name": "시우",
+          "count": 1662
+        },
+        {
+          "rank": 10,
+          "name": "이안",
+          "count": 1660
+        },
+        {
+          "rank": 11,
+          "name": "은우",
+          "count": 1607
+        },
+        {
+          "rank": 12,
+          "name": "하윤",
+          "count": 1262
+        },
+        {
+          "rank": 13,
+          "name": "선우",
+          "count": 1207
+        },
+        {
+          "rank": 14,
+          "name": "서준",
+          "count": 1075
+        },
+        {
+          "rank": 15,
+          "name": "하린",
+          "count": 1068
+        },
+        {
+          "rank": 16,
+          "name": "연우",
+          "count": 1048
+        },
+        {
+          "rank": 17,
+          "name": "도하",
+          "count": 1044
+        },
+        {
+          "rank": 18,
+          "name": "지유",
+          "count": 1018
+        },
+        {
+          "rank": 19,
+          "name": "지호",
+          "count": 860
+        },
+        {
+          "rank": 20,
+          "name": "태오",
+          "count": 776
+        },
+        {
+          "rank": 21,
+          "name": "우주",
+          "count": 775
+        },
+        {
+          "rank": 22,
+          "name": "유준",
+          "count": 679
+        },
+        {
+          "rank": 23,
+          "name": "아윤",
+          "count": 649
+        },
+        {
+          "rank": 24,
+          "name": "수호",
+          "count": 627
+        },
+        {
+          "rank": 25,
+          "name": "도현",
+          "count": 418
+        },
+        {
+          "rank": 26,
+          "name": "아린",
+          "count": 356
+        },
+        {
+          "rank": 27,
+          "name": "지아",
+          "count": 351
+        },
+        {
+          "rank": 28,
+          "name": "서우",
+          "count": 262
+        },
+        {
+          "rank": 29,
+          "name": "서윤",
+          "count": 258
+        },
+        {
+          "rank": 30,
+          "name": "시아",
+          "count": 244
+        },
+        {
+          "rank": 31,
+          "name": "재이",
+          "count": 130
+        },
+        {
+          "rank": 32,
+          "name": "로운",
+          "count": 113
+        }
+      ],
+      "male": [],
+      "female": []
+    },
+    "2025": {
+      "all": [
+        {
+          "rank": 1,
+          "name": "도윤",
+          "count": 2359
+        },
+        {
+          "rank": 2,
+          "name": "이현",
+          "count": 2224
+        },
+        {
+          "rank": 3,
+          "name": "지안",
+          "count": 2139
+        },
+        {
+          "rank": 4,
+          "name": "이안",
+          "count": 2083
+        },
+        {
+          "rank": 5,
+          "name": "이준",
+          "count": 1961
+        },
+        {
+          "rank": 6,
+          "name": "하준",
+          "count": 1912
+        },
+        {
+          "rank": 7,
+          "name": "지우",
+          "count": 1896
+        },
+        {
+          "rank": 8,
+          "name": "서아",
+          "count": 1887
+        },
+        {
+          "rank": 9,
+          "name": "서윤",
+          "count": 1858
+        },
+        {
+          "rank": 10,
+          "name": "시우",
+          "count": 1850
+        },
+        {
+          "rank": 11,
+          "name": "하린",
+          "count": 1728
+        },
+        {
+          "rank": 12,
+          "name": "이서",
+          "count": 1718
+        },
+        {
+          "rank": 13,
+          "name": "하윤",
+          "count": 1604
+        },
+        {
+          "rank": 14,
+          "name": "태오",
+          "count": 1292
+        },
+        {
+          "rank": 15,
+          "name": "도현",
+          "count": 1228
+        },
+        {
+          "rank": 16,
+          "name": "선우",
+          "count": 1107
+        },
+        {
+          "rank": 17,
+          "name": "아린",
+          "count": 1011
+        },
+        {
+          "rank": 18,
+          "name": "은우",
+          "count": 1009
+        },
+        {
+          "rank": 19,
+          "name": "도하",
+          "count": 1008
+        },
+        {
+          "rank": 20,
+          "name": "연우",
+          "count": 1002
+        },
+        {
+          "rank": 21,
+          "name": "서준",
+          "count": 977
+        },
+        {
+          "rank": 22,
+          "name": "수호",
+          "count": 801
+        },
+        {
+          "rank": 23,
+          "name": "우주",
+          "count": 590
+        },
+        {
+          "rank": 24,
+          "name": "아윤",
+          "count": 539
+        },
+        {
+          "rank": 25,
+          "name": "재이",
+          "count": 441
+        },
+        {
+          "rank": 26,
+          "name": "지유",
+          "count": 387
+        },
+        {
+          "rank": 27,
+          "name": "시아",
+          "count": 277
+        },
+        {
+          "rank": 28,
+          "name": "윤서",
+          "count": 273
+        },
+        {
+          "rank": 29,
+          "name": "지호",
+          "count": 265
+        },
+        {
+          "rank": 30,
+          "name": "은호",
+          "count": 151
+        },
+        {
+          "rank": 31,
+          "name": "유하",
+          "count": 148
+        },
+        {
+          "rank": 32,
+          "name": "주원",
+          "count": 132
+        },
+        {
+          "rank": 33,
+          "name": "시윤",
+          "count": 127
+        }
+      ],
+      "male": [],
+      "female": []
+    },
+    "2026": {
+      "all": [
+        {
+          "rank": 1,
+          "name": "서윤",
+          "count": 1105
+        },
+        {
+          "rank": 2,
+          "name": "도윤",
+          "count": 1101
+        },
+        {
+          "rank": 3,
+          "name": "이안",
+          "count": 893
+        },
+        {
+          "rank": 4,
+          "name": "지안",
+          "count": 892
+        },
+        {
+          "rank": 5,
+          "name": "이현",
+          "count": 861
+        },
+        {
+          "rank": 6,
+          "name": "하윤",
+          "count": 806
+        },
+        {
+          "rank": 7,
+          "name": "이서",
+          "count": 764
+        },
+        {
+          "rank": 8,
+          "name": "서아",
+          "count": 746
+        },
+        {
+          "rank": 9,
+          "name": "이준",
+          "count": 744
+        },
+        {
+          "rank": 10,
+          "name": "하린",
+          "count": 739
+        },
+        {
+          "rank": 11,
+          "name": "하준",
+          "count": 711
+        },
+        {
+          "rank": 12,
+          "name": "시우",
+          "count": 697
+        },
+        {
+          "rank": 13,
+          "name": "지우",
+          "count": 696
+        },
+        {
+          "rank": 14,
+          "name": "서준",
+          "count": 687
+        },
+        {
+          "rank": 15,
+          "name": "우주",
+          "count": 671
+        },
+        {
+          "rank": 16,
+          "name": "지호",
+          "count": 518
+        },
+        {
+          "rank": 17,
+          "name": "아윤",
+          "count": 341
+        },
+        {
+          "rank": 18,
+          "name": "태오",
+          "count": 339
+        },
+        {
+          "rank": 19,
+          "name": "도현",
+          "count": 329
+        },
+        {
+          "rank": 20,
+          "name": "아린",
+          "count": 321
+        },
+        {
+          "rank": 21,
+          "name": "연우",
+          "count": 316
+        },
+        {
+          "rank": 22,
+          "name": "도하",
+          "count": 284
+        },
+        {
+          "rank": 23,
+          "name": "유나",
+          "count": 174
+        },
+        {
+          "rank": 24,
+          "name": "유준",
+          "count": 171
+        },
+        {
+          "rank": 25,
+          "name": "시아",
+          "count": 160
+        },
+        {
+          "rank": 26,
+          "name": "수호",
+          "count": 159
+        },
+        {
+          "rank": 27,
+          "name": "윤서",
+          "count": 140
+        },
+        {
+          "rank": 28,
+          "name": "은하",
+          "count": 4
+        },
+        {
+          "rank": 29,
+          "name": "윤재",
+          "count": 4
+        },
+        {
+          "rank": 30,
+          "name": "윤슬",
+          "count": 2
+        },
+        {
+          "rank": 31,
+          "name": "다온",
+          "count": 2
+        },
+        {
+          "rank": 32,
+          "name": "태리",
+          "count": 2
+        },
+        {
+          "rank": 33,
+          "name": "진",
+          "count": 2
+        },
+        {
+          "rank": 34,
+          "name": "하리",
+          "count": 2
+        },
+        {
+          "rank": 35,
+          "name": "도준",
+          "count": 2
+        },
+        {
+          "rank": 36,
+          "name": "시현",
+          "count": 2
+        },
+        {
+          "rank": 37,
+          "name": "은우",
+          "count": 2
+        },
+        {
+          "rank": 38,
+          "name": "이한",
+          "count": 2
+        },
+        {
+          "rank": 39,
+          "name": "서우",
+          "count": 2
+        },
+        {
+          "rank": 40,
+          "name": "선우",
+          "count": 2
+        }
+      ],
+      "male": [],
+      "female": []
+    }
+  }
+}

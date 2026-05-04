@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아기 이름 검색 — 베이비노트</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:#C4816A; --rose-lt:rgba(196,129,106,.10); --rose-md:rgba(196,129,106,.25);
+    --ink:#1F2937; --mid:#6B7280; --lt:#9CA3AF;
+    --bg:#FDFAF6; --paper:#fff; --bd:#E5E7EB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+  .header{background:var(--paper);border-bottom:1px solid var(--bd);padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+  .header a{color:var(--mid);text-decoration:none;font-size:13px;}
+  .header h1{font-family:'Noto Serif KR',serif;font-size:17px;}
+  .header .badge{margin-left:auto;background:var(--rose-lt);color:var(--rose);font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap;}
+
+  .search-section{padding:28px 20px 16px;max-width:560px;margin:0 auto;}
+  .search-label{font-size:12px;color:var(--mid);margin-bottom:8px;display:block;}
+  .search-wrap{display:flex;gap:8px;}
+  .search-input{flex:1;border:2px solid var(--bd);border-radius:14px;padding:14px 18px;font-size:20px;font-family:'Noto Serif KR',serif;color:var(--ink);background:var(--paper);outline:none;transition:border .2s;letter-spacing:.05em;}
+  .search-input:focus{border-color:var(--rose);}
+  .search-input::placeholder{color:var(--lt);font-size:14px;font-family:'Noto Sans KR',sans-serif;}
+  .search-btn{background:var(--rose);color:#fff;border:none;border-radius:14px;padding:0 22px;font-size:15px;cursor:pointer;transition:background .2s;font-family:'Noto Sans KR',sans-serif;font-weight:700;}
+  .search-btn:hover{background:#b5705a;}
+
+  .quick-search{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .quick-label{font-size:11px;color:var(--lt);}
+  .quick-btn{background:var(--paper);border:1.5px solid var(--bd);border-radius:100px;padding:5px 13px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:var(--mid);cursor:pointer;transition:all .15s;}
+  .quick-btn:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-lt);}
+
+  .result-section{max-width:560px;margin:0 auto;padding:0 20px 60px;}
+
+  /* 이름 카드 */
+  .name-card{background:var(--paper);border:1px solid var(--bd);border-radius:20px;padding:24px;margin-bottom:14px;animation:fadeUp .3s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .name-title{font-family:'Noto Serif KR',serif;font-size:34px;color:var(--rose);margin-bottom:4px;letter-spacing:.05em;}
+  .name-sub{font-size:12px;color:var(--lt);margin-bottom:20px;}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+  .stat-box{background:var(--bg);border-radius:12px;padding:14px 16px;}
+  .stat-box.hi{background:var(--rose-lt);}
+  .s-label{font-size:11px;color:var(--lt);margin-bottom:4px;}
+  .s-value{font-size:22px;font-weight:700;color:var(--ink);}
+  .s-value.rose{color:var(--rose);}
+  .s-value span{font-size:12px;color:var(--mid);font-weight:400;}
+
+  .trend-title{font-size:13px;font-weight:700;margin-bottom:10px;}
+  .trend-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .trend-year{font-size:13px;color:var(--mid);min-width:36px;font-weight:500;}
+  .trend-rank{font-size:13px;font-weight:700;min-width:44px;}
+  .trend-rank.on{color:var(--rose);}
+  .trend-bar-bg{flex:1;height:7px;background:var(--bd);border-radius:100px;overflow:hidden;}
+  .trend-bar{height:100%;background:var(--rose);border-radius:100px;transition:width .7s cubic-bezier(.16,1,.3,1);}
+  .trend-count{font-size:12px;color:var(--lt);min-width:48px;text-align:right;}
+  .out-tag{font-size:11px;color:var(--lt);background:var(--bd);padding:2px 8px;border-radius:100px;}
+
+  /* 순위 리스트 */
+  .rank-card{background:var(--paper);border:1px solid var(--bd);border-radius:20px;padding:20px;animation:fadeUp .35s ease;}
+  .rank-card-title{font-size:14px;font-weight:700;margin-bottom:14px;}
+  .rank-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;transition:background .15s;}
+  .rank-item:hover{background:var(--bg);}
+  .rank-item.hl{background:var(--rose-lt);}
+  .r-num{font-family:'Noto Serif KR',serif;font-size:15px;color:var(--lt);min-width:26px;}
+  .r-num.g{color:#C9A96E;} .r-num.s{color:#9CA3AF;} .r-num.b{color:#C4816A;}
+  .r-name{font-size:15px;font-weight:700;flex:1;}
+  .r-name.hl{color:var(--rose);}
+  .r-tag{font-size:10px;color:var(--rose);background:var(--rose-lt);padding:2px 7px;border-radius:100px;margin-left:4px;}
+  .r-bar-wrap{flex:2;display:flex;align-items:center;gap:6px;}
+  .r-bar-bg{flex:1;height:5px;background:var(--bd);border-radius:100px;overflow:hidden;}
+  .r-bar{height:100%;background:var(--rose);border-radius:100px;}
+  .r-count{font-size:11px;color:var(--lt);min-width:40px;text-align:right;}
+
+  .empty{text-align:center;padding:50px 20px;color:var(--lt);}
+  .empty .icon{font-size:36px;display:block;margin-bottom:10px;}
+  .empty p{font-size:14px;line-height:1.7;}
+  .source{text-align:center;font-size:11px;color:var(--lt);margin-top:16px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/">← 베이비노트</a>
+  <h1>이름 검색</h1>
+  <span class="badge">대법원 통계 기반</span>
+</div>
+
+<div class="search-section">
+  <span class="search-label">아기 이름을 검색해보세요</span>
+  <div class="search-wrap">
+    <input class="search-input" id="nameInput" type="text"
+      placeholder="이름 입력..." maxlength="5"
+      onkeydown="if(event.key==='Enter')doSearch()" />
+    <button class="search-btn" onclick="doSearch()">검색</button>
+  </div>
+  <div class="quick-search">
+    <span class="quick-label">인기이름</span>
+    <button class="quick-btn" onclick="quickSearch('이현')">이현</button>
+    <button class="quick-btn" onclick="quickSearch('도윤')">도윤</button>
+    <button class="quick-btn" onclick="quickSearch('서아')">서아</button>
+    <button class="quick-btn" onclick="quickSearch('하준')">하준</button>
+    <button class="quick-btn" onclick="quickSearch('지안')">지안</button>
+    <button class="quick-btn" onclick="quickSearch('하린')">하린</button>
+  </div>
+</div>
+
+<div class="result-section" id="result">
+  <div class="empty">
+    <span class="icon">👶</span>
+    <p>이름을 검색하면<br>연도별 순위와 통계를 확인할 수 있어요</p>
+  </div>
+</div>
+
+<script>
+const DATA_URL = './name-data.json';
+let nameData = null;
+
+async function loadData() {
+  if (nameData) return nameData;
+  try {
+    const res = await fetch(DATA_URL);
+    nameData = await res.json();
+    return nameData;
+  } catch(e) { return null; }
+}
+
+function quickSearch(name) {
+  document.getElementById('nameInput').value = name;
+  doSearch();
+}
+
+async function doSearch() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) return;
+
+  const data = await loadData();
+  if (!data) {
+    document.getElementById('result').innerHTML = `<div class="empty"><span class="icon">⚠️</span><p>데이터를 불러오지 못했어요</p></div>`;
+    return;
+  }
+
+  const years = Object.keys(data.data).sort();
+  const yr = {}; // year → {rank,count} or null
+  let total = 0, bestRank = Infinity, bestYear = null;
+
+  years.forEach(y => {
+    const found = (data.data[y]?.all || []).find(d => d.name === name);
+    if (found) {
+      yr[y] = { rank: found.rank, count: found.count };
+      total += found.count;
+      if (found.rank < bestRank) { bestRank = found.rank; bestYear = y; }
+    } else yr[y] = null;
+  });
+
+  const maxCount = Math.max(...years.map(y => yr[y]?.count || 0), 1);
+  const latestY = years[years.length-1];
+  const latestR = yr[latestY];
+
+  // 트렌드 방향
+  const validYrs = years.filter(y => yr[y]);
+  let trendLabel = '-', trendColor = 'var(--lt)';
+  if (validYrs.length >= 2) {
+    const last = yr[validYrs[validYrs.length-1]].rank;
+    const prev = yr[validYrs[validYrs.length-2]].rank;
+    if (last < prev) { trendLabel = '📈 상승 중'; trendColor = '#10B981'; }
+    else if (last > prev) { trendLabel = '📉 하락 중'; trendColor = '#EF4444'; }
+    else { trendLabel = '➡️ 유지'; trendColor = '#6B7280'; }
+  }
+
+  let html = `<div class="name-card">`;
+  html += `<div class="name-title">${name}</div>`;
+  html += `<div class="name-sub">2023~${latestY}년 출생신고 통계 기반 · 대법원 전자가족관계등록시스템</div>`;
+
+  if (total === 0) {
+    html += `<div style="background:var(--bg);border-radius:12px;padding:16px;font-size:13px;color:var(--mid);line-height:1.8;">
+      📊 ${name}은(는) 2023~${latestY}년 상위 순위권에 집계되지 않았어요.<br>
+      실제로 사용되는 이름일 수 있으나, 대법원 통계는 상위 이름만 공개해요.
+    </div>`;
+  } else {
+    html += `<div class="stat-grid">
+      <div class="stat-box hi">
+        <div class="s-label">최근(${latestY}) 순위</div>
+        <div class="s-value rose">${latestR ? latestR.rank+'<span>위</span>' : '<span>순위권 밖</span>'}</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">최고 순위</div>
+        <div class="s-value">${bestRank===Infinity?'-':bestRank+'<span>위 ('+bestYear+')</span>'}</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">누적 출생신고</div>
+        <div class="s-value">${total.toLocaleString()}<span>건</span></div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">최근 트렌드</div>
+        <div class="s-value" style="font-size:14px;color:${trendColor}">${trendLabel}</div>
+      </div>
+    </div>`;
+
+    html += `<div class="trend-title">연도별 출생신고 추이</div>`;
+    years.forEach(y => {
+      const r = yr[y];
+      if (r) {
+        const bw = Math.round((r.count/maxCount)*100);
+        html += `<div class="trend-row">
+          <span class="trend-year">${y}</span>
+          <span class="trend-rank on">${r.rank}위</span>
+          <div class="trend-bar-bg"><div class="trend-bar" style="width:${bw}%"></div></div>
+          <span class="trend-count">${r.count.toLocaleString()}건</span>
+        </div>`;
+      } else {
+        html += `<div class="trend-row">
+          <span class="trend-year">${y}</span>
+          <span class="out-tag">순위권 밖</span>
+        </div>`;
+      }
+    });
+  }
+  html += `</div>`;
+
+  // 전체 순위
+  const rankList = data.data[latestY]?.all || [];
+  if (rankList.length) {
+    const maxRC = rankList[0].count;
+    html += `<div class="rank-card">`;
+    html += `<div class="rank-card-title">${latestY}년 전체 순위 <span style="font-size:11px;color:var(--lt);font-weight:400;">(클릭하면 검색)</span></div>`;
+    rankList.forEach((item, i) => {
+      const isT = item.name === name;
+      const nc = i===0?'g':i===1?'s':i===2?'b':'';
+      const bw = Math.round((item.count/maxRC)*100);
+      html += `<div class="rank-item ${isT?'hl':''}" onclick="quickSearch('${item.name}')">
+        <span class="r-num ${nc}">${item.rank}</span>
+        <span class="r-name ${isT?'hl':''}">${item.name}${isT?'<span class="r-tag">검색한 이름</span>':''}</span>
+        <div class="r-bar-wrap">
+          <div class="r-bar-bg"><div class="r-bar" style="width:${bw}%"></div></div>
+          <span class="r-count">${item.count.toLocaleString()}건</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<p class="source">출처: 대한민국 법원 전자가족관계등록시스템 · ${data.meta.collected} 수집</p>`;
+  document.getElementById('result').innerHTML = html;
+
+  // 검색한 이름으로 스크롤
+  const hl = document.querySelector('.rank-item.hl');
+  if (hl) setTimeout(() => hl.scrollIntoView({ behavior:'smooth', block:'center' }), 400);
+}
+
+window.onload = () => document.getElementById('nameInput').focus();
+</script>
+</body>
+</html>
